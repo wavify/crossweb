@@ -4,6 +4,7 @@ var fs = require('fs'),
 
 var Router = require('../').Router;
 var FileHandler = require('../').FileHandler;
+var GuardFilter = require('../').GuardFilter;
 
 var MockRequest = require('./MockRequestResponse.js').MockRequest;
 var MockResponse = require('./MockRequestResponse.js').MockResponse;
@@ -17,7 +18,7 @@ TestIt('TestRouter', {
   
   'before all': function (test) {
     
-    router = new Router(path.resolve('MockConfig.json'), FileHandler);
+    router = new Router(path.resolve('MockConfig.json'), FileHandler, [ GuardFilter ]);
     config = JSON.parse(fs.readFileSync('MockConfig.json', 'utf8'));
     
   },

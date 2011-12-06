@@ -1,0 +1,21 @@
+{
+  "address": "localhost",
+  "port": 8080,
+
+  "filters": [ "GuardFilter" ],
+
+  "routes": {},
+  
+  "log": {
+    "appenders": [{ "type": "file",
+                    "filename": "crossweb.log",
+                    "maxLogSize": 10485760,
+                    "backups": 5,
+                    "pollInterval": 15 }, 
+                  { "type": "console" }],
+    "levels": {
+      "console": "info",
+      "framework": "info"
+    }
+  }
+}

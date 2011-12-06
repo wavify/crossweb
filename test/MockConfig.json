@@ -4,9 +4,9 @@
   "address": "",
   "port": 8080,
 
-  "guard": "DefaultGuard",
+  "filters": [ "DefaultGuard" ],
 
-  "route": {
+  "routes": {
     "post:/verifySession": { "handler": "MockAccountModule.postVerify", "allow": [] },
     "get:/verifySession": { "handler": "MockAccountModule.getVerify", "allow": [] },
     "*:/verifySession": { "handler": "MockSessionModule.verify", "allow": [] },
