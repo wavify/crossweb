@@ -49,7 +49,7 @@ TestIt('TestRouter', {
     var request = new MockRequest('GET', '/verifySession');
     var response = new MockResponse();
     
-    action(request, response, config);
+    action(request, response);
     
     test.assertEqual('Session verify', response.message);
     
@@ -62,7 +62,7 @@ TestIt('TestRouter', {
     var request = new MockRequest('POST', '/verifySession');
     var response = new MockResponse();
     
-    action(request, response, config);
+    action(request, response);
     
     test.assertEqual('Session verify', response.message);
     
@@ -80,7 +80,7 @@ TestIt('TestRouter', {
         done = true;
       });
       
-    action(request, response, config);
+    action(request, response);
       
     test.waitFor(
       function (time) {

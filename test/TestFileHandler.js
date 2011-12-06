@@ -41,7 +41,7 @@ TestIt('TestFileHandler', {
         done = true;
       });
     
-    FileHandler.request(request, response, null);
+    FileHandler.request(request, response);
     
     test.waitFor(
       function (time) {
@@ -64,7 +64,7 @@ TestIt('TestFileHandler', {
         done = true;
       });
     
-    FileHandler.request(request, response, null);
+    FileHandler.request(request, response);
     
     test.waitFor(
       function (time) {
@@ -86,7 +86,7 @@ TestIt('TestFileHandler', {
         done = true;
       });
     
-    FileHandler.request(request, response, null);
+    FileHandler.request(request, response);
     
     test.waitFor(
       function (time) {
@@ -108,7 +108,7 @@ TestIt('TestFileHandler', {
         done = true;
       });
     
-    FileHandler.request(request, response, null);
+    FileHandler.request(request, response);
     
     test.waitFor(
       function (time) {
