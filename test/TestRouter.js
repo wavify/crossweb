@@ -3,6 +3,7 @@ var fs = require('fs'),
     TestIt = require('test_it');
 
 var Router = require('../').Router;
+var FileHandler = require('../').FileHandler;
 
 var MockRequest = require('./MockRequestResponse.js').MockRequest;
 var MockResponse = require('./MockRequestResponse.js').MockResponse;
@@ -16,7 +17,7 @@ TestIt('TestRouter', {
   
   'before all': function (test) {
     
-    router = new Router(path.resolve('MockConfig.json'));
+    router = new Router(path.resolve('MockConfig.json'), FileHandler);
     config = JSON.parse(fs.readFileSync('MockConfig.json', 'utf8'));
     
   },
@@ -91,6 +92,30 @@ TestIt('TestRouter', {
         test.assertEqual(200, response.statusCode);
         test.assertEqual(sample, response.message);
         
+      });
+    
+  },
+  
+  'test invoke': function (test) {
+    
+    var done = false;
+    
+    var request = new MockRequest('GET', '/sample.txt');
+    var response = new MockResponse(
+      function () {
+        done = true;
+      });
+    
+    router.invoke(request, response);
+    
+    test.waitFor(
+      function (time) {
+        return done || time > timeout;
+      },
+      function () {
+        var sample = fs.readFileSync('client/sample.txt', 'utf8');
+        test.assertEqual(200, response.statusCode);
+        test.assertEqual(sample, response.message);
       });
     
   }

@@ -1,0 +1,8 @@
+{
+  "address": "localhost",
+  "port": 8080,
+
+  "guard": "DefaultGuard",
+
+  "route": {}
+}
