@@ -1,3 +1,72 @@
 #!/usr/bin/env node
 
-console.log ('hello, world)
+var fs = require('fs'),
+    path = require('path')
+    wrench = require('wrench');
+
+var commands = {
+  generate: {
+    description: 'Generate crossweb project',
+    execute: function (argv) {
+      if (argv.length < 4) {
+        console.error ('Usage: cw generate [project name]');
+      } else {
+        var name = argv[3];
+        
+        var valid = /^[\w-]+$/;
+        if (valid.test(name)) {
+          var projectPath = path.resolve('.', name);
+          if (path.existsSync(projectPath)) {
+            console.error ('Error: Project "' + name + '" already exists.');
+          } else {
+            fs.mkdirSync(projectPath, 0755);
+            
+            var templateDirectory = path.join(__dirname, '..', 'templates');
+            wrench.copyDirSyncRecursive(templateDirectory, projectPath);
+            
+            console.log ('Create project "' + name + '" success.');
+          }
+        } else {
+          console.error ('Error: Invalid project name.');
+        }
+      }
+    }
+  },
+  help: {
+    description: 'Show this help',
+    execute: function () {
+      console.error ('Usage: cw [command]');
+      
+      console.error ();
+      console.error ('Commands:');
+
+      for (var command in commands) {
+        console.error ('  ' + command + ': ' + commands[command].description);
+      }
+      
+      console.error ();
+    }
+  }
+}
+
+var main = function (argv) {
+  
+  var target = null;
+  
+  // Parse
+  if (argv.length > 2) {
+    var parameters = argv.slice(3);
+    var argument = argv[2];
+    target = commands[argument];
+  } 
+  
+  if (target) {
+    target.execute(argv);
+  } else {
+    commands.help.execute();
+  }
+  
+  
+}
+
+main (process.argv);
