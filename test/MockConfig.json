@@ -25,6 +25,9 @@
   },
   
   "guard": {
-    "login": "/login"
+    "locations": {
+      "login": "/login",
+      "unauthorized": "/unauthorized"
+    }
   }
 }

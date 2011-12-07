@@ -19,6 +19,7 @@ TestIt('TestGuardFilter', {
     var output = GuardFilter.parse(path.resolve('MockConfig.json'));
     
     test.assert(output.methods, 'Output should have methods map');
+    test.assert(output.locations, 'Output should have location map');
     
     var getMethod = output.methods.get;
     
@@ -215,6 +216,52 @@ TestIt('TestGuardFilter', {
         test.assert(output2 === true, 'Anonymous should have permission to get resource');
       });
     
+  },
+  
+  'test fail with session': function (test) {
+    
+    var done = false;
+    
+    // Request with session means user is logged in.
+    var request = new MockRequest('get', '/resource/5', { session: { role: 'role1' }});
+    var response = new MockResponse(function () {
+      done = true;
+    });
+    
+    GuardFilter.fail(request, response);
+    
+    test.waitFor(
+      function (time) {
+        return done || time > timeout;
+      },
+      function () {
+        test.assertEqual(401, response.statusCode, 
+          'Logged in user should got 401 status code (Unauthorized)');
+      });
+    
+  },
+  
+  'test fail without session': function (test) {
+    var done = false;
+    
+    var request = new MockRequest('get', '/resource/5');
+    var response = new MockResponse(function () {
+      done = true;
+    });
+    
+    GuardFilter.fail(request, response);
+    
+    test.waitFor(
+      function (time) {
+        return done || time > timeout;
+      },
+      function () {
+        test.assertEqual(302, response.statusCode,
+          'Anonymous user should got 302 status code (Temporary moved)');
+        test.assert(response.header['Location'], 'Response header should have location');
+        test.assertEqual(response.header['Location'], '/login',
+          'New location should equal to login page.');
+      });
   }
   
 });
