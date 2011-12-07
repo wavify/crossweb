@@ -12,7 +12,7 @@ var MockFilter = {
     callback(null, this.pass);
   },
   
-  fail: function (response) {
+  fail: function (request, response) {
     
   }
 }

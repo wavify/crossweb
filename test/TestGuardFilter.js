@@ -58,7 +58,7 @@ TestIt('TestGuardFilter', {
     });
     
     var anonymouseRequest = new MockRequest('GET', '/resource/1');
-    GuardFilter.check(anonymouse, function (error, output) {
+    GuardFilter.check(anonymouseRequest, function (error, output) {
       output3 = output;
       done3 = true;
     });
@@ -98,7 +98,7 @@ TestIt('TestGuardFilter', {
     });
     
     var anonymouseRequest = new MockRequest('GET', '/resource/2');
-    GuardFilter.check(anonymouse, function (error, output) {
+    GuardFilter.check(anonymouseRequest, function (error, output) {
       output3 = output;
       done3 = true;
     });
@@ -138,7 +138,7 @@ TestIt('TestGuardFilter', {
     });
     
     var anonymouseRequest = new MockRequest('GET', '/resource/1');
-    GuardFilter.check(anonymouse, function (error, output) {
+    GuardFilter.check(anonymouseRequest, function (error, output) {
       output3 = output;
       done3 = true;
     });
@@ -170,7 +170,7 @@ TestIt('TestGuardFilter', {
     });
     
     var anonymouseRequest = new MockRequest('GET', '/resource/4');
-    GuardFilter.check(anonymouse, function (error, output) {
+    GuardFilter.check(anonymouseRequest, function (error, output) {
       output2 = output;
       done2 = true;
     });
@@ -201,7 +201,7 @@ TestIt('TestGuardFilter', {
     });
     
     var anonymouseRequest = new MockRequest('GET', '/resource/5');
-    GuardFilter.check(anonymouse, function (error, output) {
+    GuardFilter.check(anonymouseRequest, function (error, output) {
       output2 = output;
       done2 = true;
     });

@@ -10,7 +10,7 @@
     "wrench": "latest"
   },
   "devDependencies": {
-    "test_it": "latest"
+    "test_it": "git://github.com/llun/test_it.git"
   },
   "engines": [
     "node >=0.4"

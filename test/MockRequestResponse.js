@@ -1,7 +1,11 @@
 var MockRequest = function (method, url, headers) {
   this.method = method;
   this.url = url;
-  this.headers=  headers;
+  this.headers =  headers;
+  
+  if (headers && headers.session) {
+    this.session = headers.session;
+  }
 }
 
 var MockResponse = function (callback) {
