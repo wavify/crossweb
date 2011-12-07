@@ -1,6 +1,0 @@
-{
-  "name": "GuardFilter",
-  "description": "Crossweb security filter",
-  "version": "1.0.0",
-  "main": "GuardFilter.js"
-}

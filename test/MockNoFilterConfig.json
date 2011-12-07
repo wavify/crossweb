@@ -1,0 +1,6 @@
+{
+  "_base": "./client",
+
+  "filters": [],
+  "routes": {}
+}
