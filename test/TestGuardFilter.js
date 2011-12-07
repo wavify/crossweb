@@ -24,8 +24,8 @@ TestIt('TestGuardFilter', {
     
     var firstResource = getMethod['/resource/1'];
     test.assert(firstResource['role1'], 'First resource should have role1');
-    test.assert(firstResource['role2'], 'First resource should not have role2');
-    test.assertEqual(firstResource.length, 2, 'First resource should have two elements');
+    test.assert(!firstResource['role2'], 'First resource should not have role2');
+    test.assertEqual(firstResource.length, 1, 'First resource should have two elements');
     
     var fifthResource = getMethod['/resource/5'];
     test.assertEqual(fifthResource.length, 0, 'Fifth resource should have empty array');
