@@ -16,6 +16,6 @@
     "node >=0.4"
   ],
   "main": "index",
-  "bin": "./bin/cw",
+  "bin": { "cw": "./bin/cw" },
   "private": true
 }
