@@ -2,7 +2,7 @@ var fs = require('fs'),
     path = require('path'),
     TestIt = require('test_it');
 
-var FileHandler = require('../').FileHandler;
+var FileHandler = require('../lib/handlers/FileHandler').FileHandler;
 
 var MockRequest = require('./MockRequestResponse.js').MockRequest;
 var MockResponse = require('./MockRequestResponse.js').MockResponse;
@@ -13,7 +13,7 @@ TestIt('TestFileHandler', {
   
   'test file handler setup without base': function (test) {
     
-    FileHandler.setup(path.resolve('.', 'MockNoBaseConfig.json'));
+    FileHandler.setup(path.join(__dirname, 'MockNoBaseConfig.json'));
     
     var targetPath = path.resolve(__dirname, '..', 'client');
     test.assertEqual(targetPath, FileHandler.base, 
@@ -23,7 +23,7 @@ TestIt('TestFileHandler', {
   
   'test file handler setup': function (test) {
     
-    FileHandler.setup(path.resolve('.', 'MockConfig.json'));
+    FileHandler.setup(path.join(__dirname, 'MockConfig.json'));
     
     var targetPath = path.join(__dirname, 'client');
     test.assertEqual(targetPath, FileHandler.base, 
@@ -48,7 +48,8 @@ TestIt('TestFileHandler', {
         return done || time > timeout;
       },
       function () {
-        var sample = fs.readFileSync('client/sample.txt', 'utf8');
+        var samplePath = path.join(__dirname, 'client', 'sample.txt');
+        var sample = fs.readFileSync(samplePath, 'utf8');
         test.assertEqual(sample, response.message);
       });
     
@@ -115,7 +116,8 @@ TestIt('TestFileHandler', {
         return done || time > timeout;
       },
       function () {
-        var secret = fs.readFileSync('client/sample/secret.txt', 'utf8');
+        var samplePath = path.join(__dirname, 'client', 'sample', 'secret.txt');
+        var secret = fs.readFileSync(samplePath, 'utf8');
         test.assertEqual(secret, response.message);
       });
     

@@ -14,9 +14,11 @@ TestIt('TestRouter', {
   
   'before each': function (test) {
     
+    var configPath = path.join(__dirname, 'MockConfig.json');
+    
     test.store = {
-      router: new Router(path.join(__dirname, 'MockConfig.json'), FileHandler),
-      config: JSON.parse(fs.readFileSync('MockConfig.json', 'utf8')) 
+      router: new Router(configPath, FileHandler),
+      config: JSON.parse(fs.readFileSync(configPath, 'utf8')) 
     }
     
   },
@@ -127,7 +129,8 @@ TestIt('TestRouter', {
       },
       function () {
         
-        var sample = fs.readFileSync('client/sample.txt', 'utf8');
+        var samplePath = path.join(__dirname, 'client', 'sample.txt');
+        var sample = fs.readFileSync(samplePath, 'utf8');
         test.assertEqual(200, response.statusCode);
         test.assertEqual(sample, response.message);
         
@@ -155,7 +158,8 @@ TestIt('TestRouter', {
         return done || time > timeout;
       },
       function () {
-        var sample = fs.readFileSync('client/sample.txt', 'utf8');
+        var samplePath = path.join(__dirname, 'client', 'sample.txt');
+        var sample = fs.readFileSync(samplePath, 'utf8');
         test.assertEqual(200, response.statusCode);
         test.assertEqual(sample, response.message);
         
@@ -184,7 +188,8 @@ TestIt('TestRouter', {
         return done || time > timeout;
       },
       function () {
-        var sample = fs.readFileSync('client/sample.txt', 'utf8');
+        var samplePath = path.join(__dirname, 'client', 'sample.txt');
+        var sample = fs.readFileSync(samplePath, 'utf8');
         test.assertEqual(200, response.statusCode);
         test.assertEqual(sample, response.message);
       });
