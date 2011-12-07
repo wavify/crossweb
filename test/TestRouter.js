@@ -189,6 +189,29 @@ TestIt('TestRouter', {
         test.assertEqual(sample, response.message);
       });
     
+  },
+  
+  'test invoke unsupport method': function (test) {
+    var store = test.store;
+    var router = store.router;
+    
+    var done = false;
+    
+    var request = new MockRequest('HEAD', '/verifySession');
+    var response = new MockResponse(
+      function () {
+        done = true;
+      });
+    
+    router.invoke(request, response);
+    
+    test.waitFor(
+      function (time) {
+        return done || time > timeout;
+      },
+      function () {
+        test.assertEqual(404, response.statusCode);
+      });
   }
   
 });

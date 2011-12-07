@@ -15,6 +15,11 @@ var MockDefaultModule = {
   'default': function (request, response, config) {
     response.writeHead(200, {});
     response.end('default');
+  },
+  
+  'resource': function (request, response, config) {
+    response.writeHead(200, {});
+    response.end('resource');
   }
   
 }

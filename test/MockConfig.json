@@ -5,15 +5,26 @@
   "port": 8080,
 
   "filters": [ "GuardFilter", "MockFilter", "MockInvalidFilter" ],
-
+  
   "routes": {
     "post:/verifySession": { "handler": "MockAccountHandler.postVerify", "allow": [] },
     "get:/verifySession": { "handler": "MockAccountHandler.getVerify", "allow": [] },
     "*:/verifySession": { "handler": "MockSessionHandler.verify", "allow": [] },
     
+    "get:/resource/1": { "handler": "MockDefaultHandler.resource", "allow": [ "role1" ] },
+    "get:/resource/2": { "handler": "MockDefaultHandler.resource", "allow": [ "role1", "role2" ] },
+    "get:/resource/3": { "handler": "MockDefaultHandler.resource", "allow": [ "role2" ] },
+    "get:/resource/4": { "handler": "MockDefaultHandler.resource", "allow": [] },
+    "get:/resource/5": { "handler": "MockDefaultHandler.resource" },
+    
+    
     "get:/test": { "handler": "NoHandler.test", "allow": [] },
     "get:/test2": { "handler": "MockSessionHandler.nomethod", "allow": [] },
     
     "get:/image/*": { "handler": "MockDefaultHandler.compress" }
+  },
+  
+  "guard": {
+    "role": [ "role1", "role2", "role3" ]
   }
 }
