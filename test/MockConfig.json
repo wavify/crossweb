@@ -7,17 +7,13 @@
   "filters": [ "GuardFilter", "MockFilter", "MockInvalidFilter" ],
 
   "routes": {
-    "post:/verifySession": { "handler": "MockAccountModule.postVerify", "allow": [] },
-    "get:/verifySession": { "handler": "MockAccountModule.getVerify", "allow": [] },
-    "*:/verifySession": { "handler": "MockSessionModule.verify", "allow": [] },
+    "post:/verifySession": { "handler": "MockAccountHandler.postVerify", "allow": [] },
+    "get:/verifySession": { "handler": "MockAccountHandler.getVerify", "allow": [] },
+    "*:/verifySession": { "handler": "MockSessionHandler.verify", "allow": [] },
     
-    "get:/test": { "handler": "NoModule.test", "allow": [] },
-    "get:/test2": { "handler": "MockSessionModule.nomethod", "allow": [] },
+    "get:/test": { "handler": "NoHandler.test", "allow": [] },
+    "get:/test2": { "handler": "MockSessionHandler.nomethod", "allow": [] },
     
-    "get:/image/*": { "handler": "MockDefaultModule.compress" },
-    
-    "post:*": { "handler": "MockDefaultModule.post" },
-    "get:*": { "handler": "MockDefaultModule.default" },
-    "get:*": { "handler": "MockDefaultModule.raw" }
+    "get:/image/*": { "handler": "MockDefaultHandler.compress" }
   }
 }

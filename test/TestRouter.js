@@ -3,7 +3,7 @@ var fs = require('fs'),
     TestIt = require('test_it');
 
 var Router = require('../').Router;
-var FileHandler = require('../').FileHandler;
+var FileHandler = require('../lib/handlers/FileHandler').FileHandler;
 
 var MockRequest = require('./MockRequestResponse.js').MockRequest;
 var MockResponse = require('./MockRequestResponse.js').MockResponse;
