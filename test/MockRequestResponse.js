@@ -1,7 +1,8 @@
-var MockRequest = function (method, url, headers) {
+var MockRequest = function (method, url, headers, body) {
   this.method = method;
   this.url = url;
-  this.headers =  headers;
+  this.headers =  headers || {};
+  this.body = body || {};
   
   if (headers && headers.session) {
     this.session = headers.session;
@@ -17,9 +18,17 @@ var MockResponse = function (callback) {
   this.callback = callback || function () {};
 };
 
+MockResponse.prototype.setHeader = function (key, value) {
+  this.header[key] = value;
+}
+
 MockResponse.prototype.writeHead = function (code, header) {
   this.statusCode = code;
-  this.header = header;
+  
+  for (var key in header) {
+    this.header[key] = header[key];
+  }
+  
 };
 
 MockResponse.prototype.write = function (message) {

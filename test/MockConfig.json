@@ -1,10 +1,13 @@
 {
   "_base": "./client",
 
+  "name": "crossweb",
+
+  "hostname": "",
   "address": "",
   "port": 8080,
 
-  "filters": [ "GuardFilter", "MockFilter", "MockInvalidFilter" ],
+  "filters": [ "FormFilter", "MockFilter", "MockInvalidFilter" ],
   
   "routes": {
     "post:/authenticate": { "handler": "GuardHandler.authenticate" },
@@ -24,12 +27,19 @@
     "get:/test2": { "handler": "MockSessionHandler.nomethod", "allow": [] },
     
     "get:/image/*": { "handler": "MockDefaultHandler.compress" }
-  },
+  }, 
   
-  "guard": {
-    "locations": {
-      "login": "/login",
-      "unauthorized": "/unauthorized"
+  "log": {
+    "appenders": [ { "type": "file",
+                     "filename": "crossweb.log",
+                     "maxLogSize": 10485760,
+                     "backups": 5,
+                     "pollInterval": 15 },
+                   { "type": "console" } ],
+    "levels": {
+      "console": "info",
+      "crossweb": "info"
     }
   }
+  
 }
