@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var exec = require('child_process').exec,
+    spawn = require('child_process').spawn,
     fs = require('fs'),
     path = require('path')
     wrench = require('wrench');
@@ -9,19 +10,45 @@ var commands = {
   start: {
     description: 'Start crossweb project',
     execute: function (argv) {
+      var applicationPath = null;
+      var pidPath = './run.pid';
+    
       var current = process.cwd();
       if (path.existsSync(path.join(current, 'server', 'app.js'))) {
-        var child = exec('/usr/bin/env node server/app.js &',
-          function (error, stdout, stderr) {
-            console.log (stdout);
-            console.error (stderr);
-            if (error) {
-              console.log ('exec error: ' + error);
-            }
-          });
+        applicationPath = 'server/app.js';
+        pidPath = '../run.pid';
+      } else if (path.existsSync(path.join(current, 'app.js'))) {
+        applicationPath = 'app.js';
       } else {
         console.error ('Main application file does not exists');
       }
+      
+      if (applicationPath) {
+        if (path.existsSync('run.pid')) {
+          var pid = fs.readFileSync(pidPath, 'utf8');
+          exec('kill ' + pid);
+        }
+
+        var npm = spawn('npm', [ 'install' ]);
+        npm.stdout.on('data', function (data) {
+          console.log (data);
+        });
+
+        npm.stderr.on('data', function (data) {
+          console.error (data);
+        });
+
+        npm.on('exit', function (code) {
+
+          if (code !== 0) {
+            // Invoke node
+            var node = spawn('node', [ applicationPath, '&' ]);
+            fs.writeFileSync('run.pid', node.pid);
+          }
+
+        });
+      }
+      
     }
   },
   generate: {
