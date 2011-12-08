@@ -45,6 +45,25 @@ var commands = {
         npm.on('exit', function (code) {
 
           console.log ('Install dependencies success');
+          
+          // Invoke node
+          var node = spawn('node', [ applicationPath, '&' ]);
+          node.stdout.setEncoding('utf8');
+          node.stdout.on('data', function (data) {
+            console.log (data);
+          });
+
+          node.stderr.setEncoding('utf8');
+          node.stderr.on('data', function (data) {
+            console.error (data);
+          });
+          
+          node.on('exit', function (code) {
+            console.log (code);
+          })
+          
+          
+          fs.writeFileSync('run.pid', '' + node.pid);
 
         });
       }
