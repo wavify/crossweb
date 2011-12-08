@@ -5,6 +5,6 @@ var MockSessionModule = {
     response.end('Session verify');
   }
   
-}
+};
 
 exports.verify = MockSessionModule.verify;

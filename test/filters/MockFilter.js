@@ -15,6 +15,6 @@ var MockFilter = {
   fail: function (request, response) {
     
   }
-}
+};
 
 exports.MockFilter = MockFilter;

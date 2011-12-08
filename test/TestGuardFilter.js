@@ -12,11 +12,11 @@ var timeout = 1000;
 TestIt('TestGuardFilter', {
   
   'before all': function (test) {
-    GuardFilter.setup(path.resolve('MockConfig.json'));
+    GuardFilter.setup(path.join(__dirname, 'MockConfig.json'));
   },
   
   'test guard parse config': function (test) {
-    var output = GuardFilter.parse(path.resolve('MockConfig.json'));
+    var output = GuardFilter.parse(path.join(__dirname, 'MockConfig.json'));
     
     test.assert(output.methods, 'Output should have methods map');
     test.assert(output.locations, 'Output should have location map');
@@ -24,8 +24,8 @@ TestIt('TestGuardFilter', {
     var getMethod = output.methods.get;
     
     var firstResource = getMethod['/resource/1'];
-    test.assert(firstResource['role1'], 'First resource should have role1');
-    test.assert(!firstResource['role2'], 'First resource should not have role2');
+    test.assert(firstResource.role1, 'First resource should have role1');
+    test.assert(!firstResource.role2, 'First resource should not have role2');
     test.assertEqual(firstResource.length, 1, 'First resource should have two elements');
     
     var fifthResource = getMethod['/resource/5'];
@@ -258,8 +258,8 @@ TestIt('TestGuardFilter', {
       function () {
         test.assertEqual(302, response.statusCode,
           'Anonymous user should got 302 status code (Temporary moved)');
-        test.assert(response.header['Location'], 'Response header should have location');
-        test.assertEqual(response.header['Location'], '/login',
+        test.assert(response.header.Location, 'Response header should have location');
+        test.assertEqual(response.header.Location, '/login',
           'New location should equal to login page.');
       });
   }

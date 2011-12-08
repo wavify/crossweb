@@ -9,7 +9,7 @@ var MockAccountModule = {
     response.end('Account post verify');
   }
   
-}
+};
 
 exports.getVerify = MockAccountModule.getVerify;
 exports.postVerify = MockAccountModule.postVerify;

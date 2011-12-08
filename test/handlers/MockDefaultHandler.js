@@ -1,30 +1,30 @@
 var MockDefaultModule = {
   
-  'compress': function (request, response, config) {
+  'compressAction': function (request, response, config) {
     response.writeHead(200, {});
     response.end('compress');
   },
-  'static': function (request, response, config) {
+  'staticAction': function (request, response, config) {
     response.writeHead(200, {});
     response.end('static');
   },
-  'post': function (request, response, config) {
+  'postAction': function (request, response, config) {
     response.writeHead(200, {});
     response.end('post');
   },
-  'default': function (request, response, config) {
+  'defaultAction': function (request, response, config) {
     response.writeHead(200, {});
     response.end('default');
   },
   
-  'resource': function (request, response, config) {
+  'resourceAction': function (request, response, config) {
     response.writeHead(200, {});
     response.end('resource');
   }
   
-}
+};
 
-exports.compress = MockDefaultModule.compress;
-exports.static = MockDefaultModule.static;
-exports.post = MockDefaultModule.post;
-exports.default = MockDefaultModule.default;
+exports.compress = MockDefaultModule.compressAction;
+exports.staticfile = MockDefaultModule.staticAction;
+exports.post = MockDefaultModule.postAction;
+exports.defaultaction = MockDefaultModule.defaultAction;

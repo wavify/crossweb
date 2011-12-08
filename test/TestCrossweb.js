@@ -21,7 +21,7 @@ TestIt('TestRouter', {
       filters: filters,
       router: new Router(path.resolve('MockConfig.json'), FileHandler, filters),
       config: JSON.parse(fs.readFileSync('MockConfig.json', 'utf8')) 
-    }
+    };
     
   },
   
@@ -34,8 +34,8 @@ TestIt('TestRouter', {
     test.assert(methods.get);
     test.assert(methods.post);
     
-    test.assert(!methods['GET']);
-    test.assert(!methods['POST']);
+    test.assert(!methods.GET);
+    test.assert(!methods.POST);
     
     var getMethod = methods.get;
     test.assert(getMethod['/verifySession']);

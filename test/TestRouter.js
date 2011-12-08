@@ -19,7 +19,7 @@ TestIt('TestRouter', {
     test.store = {
       router: new Router(configPath, FileHandler),
       config: JSON.parse(fs.readFileSync(configPath, 'utf8')) 
-    }
+    };
     
   },
   
@@ -35,8 +35,8 @@ TestIt('TestRouter', {
     test.assert(methods.get, 'methods should have "get" property');
     test.assert(methods.post, 'methods should have "post" property');
     
-    test.assert(!methods['GET']), 'methods should not have "GET" property';
-    test.assert(!methods['POST'], 'methods should not have "POST" property');
+    test.assert(!methods.GET, 'methods should not have "GET" property');
+    test.assert(!methods.POST, 'methods should not have "POST" property');
     
     var getMethod = methods.get;
     test.assert(getMethod['/verifySession'], 'get list should have verifySession path');
@@ -45,9 +45,10 @@ TestIt('TestRouter', {
     
     test.assert(!getMethod['/image/*'], 'get list should have image path');
     
+    var key;
     // Count handlers
     var handlerCount = 0;
-    for (var key in handlers) {
+    for (key in handlers) {
       handlerCount++;
     }
     
@@ -56,7 +57,7 @@ TestIt('TestRouter', {
     
     // Count router handlers
     var routerHandlerCount = 0;
-    for (var key in router.handlers) {
+    for (key in router.handlers) {
       routerHandlerCount++;
     }
     test.assertEqual(routerHandlerCount, handlerCount, 'Router handler should equal to parser handler.');
