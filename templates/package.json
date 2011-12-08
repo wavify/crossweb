@@ -2,7 +2,7 @@
   "name": "crossweb project",
   "version": "1.0.0",
   "dependencies": {
-    "crossweb": "latest"
+    "crossweb": "git+http://192.168.178.10/git/crossweb/framework.git"
   },
   "devDependencies": {
     "test_it": "git://github.com/llun/test_it.git"
