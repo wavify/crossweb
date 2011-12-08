@@ -7,6 +7,8 @@
   "filters": [ "GuardFilter", "MockFilter", "MockInvalidFilter" ],
   
   "routes": {
+    "post:/authenticate": { "handler": "GuardHandler.authenticate" },
+    
     "post:/verifySession": { "handler": "MockAccountHandler.postVerify", "allow": [] },
     "get:/verifySession": { "handler": "MockAccountHandler.getVerify", "allow": [] },
     "*:/verifySession": { "handler": "MockSessionHandler.verify", "allow": [] },
