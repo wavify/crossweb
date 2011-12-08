@@ -26,9 +26,11 @@ var commands = {
       if (applicationPath) {
         if (path.existsSync('run.pid')) {
           var pid = fs.readFileSync(pidPath, 'utf8');
+          console.log ('Kill ' + pid);
           exec('kill ' + pid);
         }
 
+        console.log ('Installing dependencies');
         var npm = spawn('npm', [ 'install' ]);
         npm.stdout.on('data', function (data) {
           console.log (data);
@@ -40,11 +42,7 @@ var commands = {
 
         npm.on('exit', function (code) {
 
-          if (code !== 0) {
-            // Invoke node
-            var node = spawn('node', [ applicationPath, '&' ]);
-            fs.writeFileSync('run.pid', node.pid);
-          }
+          console.log ('Install dependencies success');
 
         });
       }
