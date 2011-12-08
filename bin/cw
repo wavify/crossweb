@@ -34,12 +34,20 @@ var commands = {
         npm.on('exit', function (code) {
 
           // Invoke node
-          var node = spawn('node', [ applicationPath , '&' ]);
-          fs.writeFileSync(pidPath, '' + node.pid);
+          var node = spawn('node', [ applicationPath ]);
+          node.stdout.setEncoding('utf8');
+          node.stdout.on('data', function (data) {
+            console.log (data);
+          });
           
-          console.log ('Start application on ' + node.pid);
+          node.stderr.setEncoding('utf8');
+          node.stderr.on('data', function (data) {
+            console.error (data);
+          });
           
-          process.exit(0);
+          node.on('exit', function (code) {
+            console.log (code);
+          });
         });
       }
       
