@@ -32,10 +32,12 @@ var commands = {
 
         console.log ('Installing dependencies');
         var npm = spawn('npm', [ 'install' ]);
+        npm.stdout.setEncoding('utf8');
         npm.stdout.on('data', function (data) {
           console.log (data);
         });
 
+        npm.stderr.setEncoding('utf8');
         npm.stderr.on('data', function (data) {
           console.error (data);
         });
