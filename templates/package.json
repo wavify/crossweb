@@ -1,0 +1,15 @@
+{
+  "name": "crossweb project",
+  "version": "1.0.0",
+  "dependencies": {
+    "crossweb": "latest"
+  },
+  "devDependencies": {
+    "test_it": "git://github.com/llun/test_it.git"
+  },
+  "engines": [
+    "node >=0.4"
+  ],
+  "main": "server/app.js",
+  "private": true
+}
