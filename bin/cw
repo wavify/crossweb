@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
-var exec = require('child_process').exec,
-    spawn = require('child_process').spawn,
+var daemon = require('daemon'),
+    exec = require('child_process').exec,
     fs = require('fs'),
     path = require('path')
+    spawn = require('child_process').spawn,
     wrench = require('wrench');
 
 var commands = {
@@ -11,20 +12,21 @@ var commands = {
     description: 'Start crossweb project',
     execute: function (argv) {
       var applicationPath = null;
-      var pidPath = './run.pid';
-    
+      
       var current = process.cwd();
+      var pidPath = path.join(current, 'run.pid');
+      
       if (path.existsSync(path.join(current, 'server', 'app.js'))) {
         applicationPath = 'server/app.js';
-        pidPath = '../run.pid';
       } else if (path.existsSync(path.join(current, 'app.js'))) {
         applicationPath = 'app.js';
+        pidPath = path.join(current, '..', 'run.pid');
       } else {
         console.error ('Main application file does not exists');
       }
       
       if (applicationPath) {
-        if (path.existsSync('run.pid')) {
+        if (path.existsSync(pidPath)) {
           var pid = fs.readFileSync(pidPath, 'utf8');
           exec('kill ' + pid);
         }
@@ -34,23 +36,49 @@ var commands = {
         npm.on('exit', function (code) {
 
           // Invoke node
+          var pids = ''
           var node = spawn('node', [ applicationPath ]);
-          node.stdout.setEncoding('utf8');
-          node.stdout.on('data', function (data) {
-            console.log (data);
-          });
+          pids += node.pid + '\n';
           
-          node.stderr.setEncoding('utf8');
-          node.stderr.on('data', function (data) {
-            console.error (data);
-          });
+          console.log ('Start application on ' + node.pid);
           
-          node.on('exit', function (code) {
-            console.log (code);
+          daemon.daemonize('/dev/null', pidPath, function (error, pid) {
+          
+            pids += pid + '\n';
+            fs.writeFileSync(pidPath, pids);
+          
           });
         });
       }
       
+    }
+  },
+  stop: {
+    description: 'Stop crossweb project',
+    execute: function () {
+      var current = process.cwd();
+      var pidPath = path.join(current, 'run.pid');
+      
+      if (path.existsSync(path.join(current, 'app.js'))) {
+        applicationPath = 'app.js';
+        pidPath = path.join(current, '..', 'run.pid');
+      } 
+      
+      if (path.existsSync(pidPath)) {
+        var pids = fs.readFileSync(pidPath, 'utf8');
+        var lines = pids.split('\n');
+        for (var index = 0; index < lines.length; index++) {
+          if (lines[index].length > 0) {
+            exec('kill ' + lines[index]);
+          }
+        }
+        
+        fs.unlinkSync(pidPath);
+        
+        console.log ('Stopped project success');
+      } else {
+        console.log ('No project process found');
+      }
     }
   },
   generate: {

@@ -1,8 +1,8 @@
 {
   "name": "crossweb",
 
-  "hostname": "",
-  "address": "",
+  "hostname": "localhost",
+  "address": "127.0.0.1",
   "port": 8080,
   
   "pid": "project.pid",
