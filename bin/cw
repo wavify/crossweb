@@ -81,6 +81,10 @@ var commands = {
   help: {
     description: 'Show this help',
     execute: function () {
+      var package = path.join(__dirname, '..', 'package.json');
+      var config = JSON.parse(fs.readFileSync(package, 'utf8'));
+      
+      console.log ('Crossweb version: ' + config.version);
       console.error ('Usage: cw [command]');
       
       console.error ();
@@ -92,15 +96,8 @@ var commands = {
       
       console.error ();
     }
-  },
-  version: {
-    description: 'Show framework version',
-    execute: function () {
-      var package = path.join(__dirname, '..', 'package.json');
-      var config = JSON.parse(fs.readFileSync(package, 'utf8'));
-      console.log ('Version: ' + config.version);
-    }
   }
+  
 }
 
 var main = function (argv) {
