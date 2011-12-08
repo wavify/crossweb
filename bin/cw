@@ -32,38 +32,15 @@ var commands = {
 
         console.log ('Installing dependencies');
         var npm = spawn('npm', [ 'install' ]);
-        npm.stdout.setEncoding('utf8');
-        npm.stdout.on('data', function (data) {
-          console.log (data);
-        });
-
-        npm.stderr.setEncoding('utf8');
-        npm.stderr.on('data', function (data) {
-          console.error (data);
-        });
-
         npm.on('exit', function (code) {
 
-          console.log ('Install dependencies success');
-          
           // Invoke node
-          var node = spawn('node', [ applicationPath, '&' ]);
-          node.stdout.setEncoding('utf8');
-          node.stdout.on('data', function (data) {
-            console.log (data);
-          });
-
-          node.stderr.setEncoding('utf8');
-          node.stderr.on('data', function (data) {
-            console.error (data);
-          });
+          var node = exec('node ' + applicationPath + '&');
+          fs.writeFileSync(pidPath, '' + node.pid);
           
-          node.on('exit', function (code) {
-            console.log (code);
-          })
+          console.log ('Start application on ' + node.pid);
           
-          
-          fs.writeFileSync('run.pid', '' + node.pid);
+          process.exit(0);
 
         });
       }
