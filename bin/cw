@@ -26,7 +26,6 @@ var commands = {
       if (applicationPath) {
         if (path.existsSync('run.pid')) {
           var pid = fs.readFileSync(pidPath, 'utf8');
-          console.log ('Kill ' + pid);
           exec('kill ' + pid);
         }
 
@@ -35,13 +34,12 @@ var commands = {
         npm.on('exit', function (code) {
 
           // Invoke node
-          var node = exec('node ' + applicationPath + '&');
+          var node = spawn('node', [ applicationPath , '&' ]);
           fs.writeFileSync(pidPath, '' + node.pid);
           
           console.log ('Start application on ' + node.pid);
           
           process.exit(0);
-
         });
       }
       
