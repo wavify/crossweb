@@ -4,6 +4,8 @@
   "hostname": "",
   "address": "",
   "port": 8080,
+  
+  "pid": "project.pid",
 
   "filters": [ "FormFilter" ],
   
@@ -18,7 +20,9 @@
                    { "type": "console" } ],
     "levels": {
       "console": "info",
-      "crossweb": "info"
+      "crossweb": "info",
+      
+      "danger": "error"
     }
   }
   
