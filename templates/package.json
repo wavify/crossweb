@@ -1,5 +1,5 @@
 {
-  "name": "crossweb project",
+  "name": "webproject",
   "version": "1.0.0",
   "dependencies": {
     "crossweb": "git+http://192.168.178.10/git/crossweb/framework.git"
