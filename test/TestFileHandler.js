@@ -99,6 +99,28 @@ TestIt('TestFileHandler', {
     
   },
   
+  'test request folder that have index file': function (test) {
+    var done = false;
+    
+    var request = new MockRequest('GET', '/', {});
+    var response = new MockResponse(
+      function () {
+        done = true;
+      });
+    
+    FileHandler.request(request, response);
+    
+    test.waitFor(
+      function (time) {
+        return done || time > timeout;
+      },
+      function () {
+        test.assertEqual(301, response.statusCode);
+        test.assertEqual('/index.html', response.header.Location,
+          'Request folder should redirect to index if that folder have an index file.');
+      });
+  },
+  
   'test request file in folder': function (test) {
     
     var done = false;
