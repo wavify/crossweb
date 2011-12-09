@@ -15,12 +15,14 @@ var commands = {
       
       var current = process.cwd();
       var pidPath = path.join(current, 'run.pid');
+      var nodeModulePath = path.join(current, 'node_modules');
       
       if (path.existsSync(path.join(current, 'server', 'app.js'))) {
         applicationPath = 'server/app.js';
       } else if (path.existsSync(path.join(current, 'app.js'))) {
         applicationPath = 'app.js';
         pidPath = path.join(current, '..', 'run.pid');
+        nodeModulePath = path.join(current, '..', 'node_modules');
       } else {
         console.error ('Main application file does not exists');
       }
@@ -30,25 +32,33 @@ var commands = {
           var pid = fs.readFileSync(pidPath, 'utf8');
           exec('kill ' + pid);
         }
-
-        console.log ('Installing dependencies');
-        var npm = spawn('npm', [ 'install' ]);
-        npm.on('exit', function (code) {
-
+        
+        var startNodeService = function () {
           // Invoke node
           var pids = ''
           var node = spawn('node', [ applicationPath ]);
           pids += node.pid + '\n';
-          
+
           console.log ('Start application on ' + node.pid);
-          
+
           daemon.daemonize('/dev/null', pidPath, function (error, pid) {
-          
+
             pids += pid + '\n';
             fs.writeFileSync(pidPath, pids);
-          
+
           });
-        });
+        }
+
+        if (path.existsSync(nodeModulePath)) {
+          startNodeService();
+        } else {
+          console.log ('Installing dependencies');
+          var npm = spawn('npm', [ 'install' ]);
+          npm.on('exit', function (code) {
+            startNodeService();
+          });
+        }
+        
       }
       
     }

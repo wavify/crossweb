@@ -7,7 +7,7 @@
   "address": "",
   "port": 8080,
 
-  "filters": [ "FormFilter", "MockFilter", "MockInvalidFilter" ],
+  "filters": [ "MockFilter", "MockFilter", "MockInvalidFilter" ],
   
   "routes": {
     "post:/authenticate": { "handler": "GuardHandler.authenticate" },
