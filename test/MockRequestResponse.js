@@ -19,6 +19,9 @@ MockRequest.prototype.setEncoding = function (encoding) {
   this.encoding = encoding; 
 };
 
+MockRequest.prototype.pause = function () {}
+MockRequest.prototype.resume = function () {}
+
 MockRequest.prototype.write = function (data) {
   this.emit('data', data);
 }
