@@ -1,13 +1,31 @@
-var MockRequest = function (method, url, headers, body) {
+var events = require('events'),
+    util = require('util');
+
+var MockRequest = function (method, url, headers) {
   this.method = method;
   this.url = url;
   this.headers =  headers || {};
-  this.body = body || {};
   
   if (headers && headers.session) {
     this.session = headers.session;
   }
+  
+  events.EventEmitter.call(this);
 };
+
+util.inherits(MockRequest, events.EventEmitter);
+
+MockRequest.prototype.setEncoding = function (encoding) { 
+  this.encoding = encoding; 
+};
+
+MockRequest.prototype.write = function (data) {
+  this.emit('data', data);
+}
+
+MockRequest.prototype.end = function () {
+  this.emit('end');
+}
 
 var MockResponse = function (callback) {
   this.statusCode = -1;
