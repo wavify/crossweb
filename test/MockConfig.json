@@ -29,8 +29,25 @@
     "get:/image/*": { "handler": "MockDefaultHandler.compress" }
   }, 
   
+  "guard": {
+    "users": {
+      "admin@sample": { "password": "1password;", "roles": [ "role1" ] },
+      "user1@sample": { "password": "1password;", "roles": [ "role2" ] },
+      "user2@sample": { "password": "1password;", "roles": [ "role2", "role3" ]}
+    }
+  },
+  
   "log": {
-    "appenders": [ { "type": "file",
+    "appenders": [ { "category": "danger",
+                     "type": "logLevelFilter",
+                     "level": "error",
+                     "appender": {
+                       "type": "file",
+                       "filenamae": "crossweb-error.log",
+                       "maxLogSize": 10485760,
+                       "backups": 5,
+                       "pollInterval": 15 }},
+                   { "type": "file",
                      "filename": "crossweb.log",
                      "maxLogSize": 10485760,
                      "backups": 5,
@@ -38,7 +55,9 @@
                    { "type": "console" } ],
     "levels": {
       "console": "info",
-      "crossweb": "info"
+      "crossweb": "info",
+      
+      "danger": "error"
     }
   }
   
