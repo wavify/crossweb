@@ -7,9 +7,13 @@
   
   "pid": "project.pid",
 
-  "filters": [ "FormFilter" ],
+  "filters": [ "FormFilter", "GuardFilter" ],
   
   "routes": {}, 
+  
+  "guard": {
+    "authenticator": ""
+  },
   
   "log": {
     "appenders": [ { "type": "file",

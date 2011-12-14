@@ -30,6 +30,9 @@
   }, 
   
   "guard": {
+    "locations": {
+      "index": "/index"
+    },
     "users": {
       "admin@sample": { "password": "1password;", "roles": [ "role1" ] },
       "user1@sample": { "password": "1password;", "roles": [ "role2" ] },

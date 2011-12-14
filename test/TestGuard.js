@@ -5,7 +5,7 @@ var TestIt = require('test_it');
 
 var Error = require('../lib/error.js').FrameworkError;
 var Guard = require('../lib/modules/guard.js').Guard;
-var Resource = Guard.Resource;
+var Resource = require('../lib/modules/guard.js').Resource;
 
 var timeout = 1000;
 
@@ -312,6 +312,56 @@ TestIt('TestGuard', {
       function () {
         test.assert(!unexpect, 'Guard should not return any unexpect');
         test.assert(output === true, 'Guard should allow anonymous to use resource5');
+      });
+  },
+  
+  'test authorize no resource with anonymous': function (test) {
+    var done = false;
+    var unexpect = null;
+    var output = null;
+    
+    var guard = test.guard;
+    
+    var resource = new Resource('get', '/no/resource');
+    guard.authorize(resource, null, function (error, result) {
+      unexpect = error;
+      output = result;
+      
+      done = true;
+    });
+    
+    test.waitFor(
+      function (time) {
+        return done || time > timeout;
+      },
+      function () {
+        test.assert(!unexpect, 'Guard should not return any unexpect');
+        test.assert(output === true, 'Guard should allow anonymous to use no resource');
+      });
+  },
+  
+  'test authorize no method with anonymous': function (test) {
+    var done = false;
+    var unexpect = null;
+    var output = null;
+    
+    var guard = test.guard;
+    
+    var resource = new Resource('put', '/resource/1');
+    guard.authorize(resource, null, function (error, result) {
+      unexpect = error;
+      output = result;
+      
+      done = true;
+    });
+    
+    test.waitFor(
+      function (time) {
+        return done || time > timeout;
+      },
+      function () {
+        test.assert(!unexpect, 'Guard should not return any unexpect');
+        test.assert(output === true, 'Guard should allow anonymous to use no method');
       });
   }
   
