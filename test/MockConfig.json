@@ -30,6 +30,7 @@
   }, 
   
   "guard": {
+    "session": "session",
     "locations": {
       "index": "/index"
     },

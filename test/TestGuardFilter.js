@@ -119,6 +119,9 @@ TestIt('TestGuardFilter', {
     var result = null;
     
     var request = new MockRequest('GET', '/resource/1?session=HFk/Rh6Asdx6J5LqNyaKJuy/Yqb7KiKKFOlLyetcXefWPegtLb7cixtOQK9qs6P7');
+    request.body = {
+      session: 'HFk/Rh6Asdx6J5LqNyaKJuy/Yqb7KiKKFOlLyetcXefWPegtLb7cixtOQK9qs6P7'
+    };
     
     GuardFilter.check(request, function (error, output) {
       result = output;
