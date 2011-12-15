@@ -2,6 +2,8 @@ var path = require('path');
 
 var TestIt = require('test_it');
 
+var Error = require('../lib/error').FrameworkError;
+
 var GuardHandler = require('../lib/handlers/GuardHandler').GuardHandler;
 var MockRequest = require('./MockRequestResponse').MockRequest;
 var MockResponse = require('./MockRequestResponse').MockResponse;
@@ -100,7 +102,7 @@ TestIt('TestGuardHandler', {
           JSON.stringify({
             message: 'Invalid password',
             domain: 30,
-            code: 1011
+            code: Error.AUTHENTICATE_WRONG_PASSWORD
             }), 
           response.message,
           'Authenticate fail message should response JSON object');
@@ -112,5 +114,47 @@ TestIt('TestGuardHandler', {
       });
     
   },
+  
+  'test authenticate with session': function (test) {
+    var done = false;
+    var request = new MockRequest('POST', '/authenticate', {
+      session: {
+        user: 'admin@sample',
+        roles: ['role1']
+      }
+    });
+    request.body = {
+      username: 'admin@sample',
+      password: 'wrongpassword',
+      type: 'plain'
+    };
+    
+    var response = new MockResponse(
+      function () {
+        done = true;
+      });
+      
+    var expect = new Date().getTime() + 1314000000;
+    GuardHandler.authenticate(request, response);
+    
+    test.waitFor(
+      function (time) {
+        return done || time > timeout;
+      },
+      function () {
+        test.assertEqual(302, response.statusCode, 
+          'Response should redirect to somewhere');
+        test.assertEqual('/index', response.header.Location,
+          'GuardHandler should redirect to index after authenticate success');
+        
+        test.assert(response.header['Set-Cookie'], 
+          'GuardHandler should set cookie after authenticate success');
+          
+        var expireTime = response.header['Set-Cookie'][2].match('expireTime=\\d+;')[0].split('=')[1];
+        expireTime = parseInt(expireTime.substring(0, expireTime.length-1));
+        
+        test.assert(expireTime >= expect, 'Cookie expire time should extend');
+      });
+  }
   
 });

@@ -70,8 +70,72 @@ TestIt('TestGuardFilter', {
     var result = null;
     
     var request = new MockRequest('GET', '/resource/1', {
-      cookie: ''
+      cookie: 'user=admin@sample; session=HFk/Rh6Asdx6J5LqNyaKJuy/Yqb7KiKKFOlLyetcXefWPegtLb7cixtOQK9qs6P7; expireTime=1325240582559'
     });
+    
+    GuardFilter.check(request, function (error, output) {
+      result = output;
+      
+      done = true;
+    });
+    
+    test.waitFor(
+      function (time) {
+        return done || time > timeout;
+      },
+      function () {
+        test.assert(result === true, 'Guard should allow admin use resource1');
+        test.assert(request.session, 'Guard should create session from cookie');
+        test.assertEqual('admin@sample', request.session.user, 'Session should have user attribute');
+        test.assertEqual('role1', request.session.roles[0], 'Admin should have role1');
+      });
+  },
+  
+  'test authorize resource1 with invalid cookie session': function (test) {
+    var done = false;
+    var result = null;
+    
+    var request = new MockRequest('GET', '/resource/1', {
+      cookie: 'user=admin@sample; session=invalidsession; expireTime=1325240582559'
+    });
+    
+    GuardFilter.check(request, function (error, output) {
+      result = output;
+      
+      done = true;
+    });
+    
+    test.waitFor(
+      function (time) {
+        return done || time > timeout;
+      },
+      function () {
+        test.assert(result === false, 'Guard should not allow anonymous use resource1');
+      });
+  },
+  
+  'test authorize resource1 with query session': function (test) {
+    var done = false;
+    var result = null;
+    
+    var request = new MockRequest('GET', '/resource/1?session=HFk/Rh6Asdx6J5LqNyaKJuy/Yqb7KiKKFOlLyetcXefWPegtLb7cixtOQK9qs6P7');
+    
+    GuardFilter.check(request, function (error, output) {
+      result = output;
+      
+      done = true;
+    });
+    
+    test.waitFor(
+      function (time) {
+        return done || time > timeout;
+      },
+      function () {
+        test.assert(result === true, 'Guard should allow admin use resource1');
+        test.assert(request.session, 'Guard should create session from cookie');
+        test.assertEqual('admin@sample', request.session.user, 'Session should have user attribute');
+        test.assertEqual('role1', request.session.roles[0], 'Admin should have role1');
+      });
   }
   
 });
