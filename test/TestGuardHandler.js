@@ -6,6 +6,10 @@ var GuardHandler = require('../lib/handlers/GuardHandler').GuardHandler;
 var MockRequest = require('./MockRequestResponse').MockRequest;
 var MockResponse = require('./MockRequestResponse').MockResponse;
 
+var Security = require('../lib/modules/guard').Security;
+var cipher = new Security('aes128', '5F4DCC3B5AA765D61D8327DEB882CF99', 
+                          '2B95990A9151374ABD8FF8C5A7A0FE08');
+
 var timeout = 1000;
 
 TestIt('TestGuardHandler', {
@@ -31,6 +35,8 @@ TestIt('TestGuardHandler', {
       
     GuardHandler.authenticate(request, response);
     
+    
+    
     test.waitFor(
       function (time) {
         return done || time > timeout;
@@ -40,16 +46,22 @@ TestIt('TestGuardHandler', {
           'Response should redirect to somewhere');
         test.assertEqual('/index', response.header.Location,
           'GuardHandler should redirect to index after authenticate success');
-          
+        
+        var session = cipher.encrypt(JSON.stringify({
+          user: 'admin@sample',
+          roles: ['role1']
+        }));
+        var expect = [
+          'user=admin@sample; Path=/;',
+          'session=' + session + '; Path=/;',
+          'expireTime=' + (new Date().getTime() + 1314000000) + '; Path=/;'
+        ];
+        
         test.assert(response.header['Set-Cookie'], 
           'GuardHandler should set cookie after authenticate success');
-        test.assertEqual(
-          [
-            'user=admin@sample; Path=/;',
-            'role=role1; Path=/;'
-          ], 
-          response.header['Set-Cookie'],
-          'Cookie mismatch');
+          
+        test.assertEqual(expect[0],  response.header['Set-Cookie'][0]);
+        test.assertEqual(expect[1],  response.header['Set-Cookie'][1]);
 
         test.assert(response.header['P3P'], 'Response header should have P3P header');
         test.assertEqual(

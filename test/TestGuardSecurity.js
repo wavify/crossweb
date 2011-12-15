@@ -1,6 +1,6 @@
 var TestIt = require('test_it');
 
-var Security = require('../lib/modules/guard.js')._Security;
+var Security = require('../lib/modules/guard.js').Security;
 
 TestIt('TestGuard', {
   

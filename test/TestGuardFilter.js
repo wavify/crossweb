@@ -6,6 +6,8 @@ var GuardFilter = require('../lib/filters/GuardFilter').GuardFilter;
 var MockRequest = require('./MockRequestResponse').MockRequest;
 var MockResponse = require('./MockRequestResponse').MockResponse;
 
+var Security = require('../lib/modules/guard').Security;
+
 var timeout = 1000;
 
 TestIt('TestGuardFilter', {
@@ -59,7 +61,7 @@ TestIt('TestGuardFilter', {
         return done || time > timeout;
       },
       function () {
-        test.assert(result === false, 'Guard should not allow anonymous use resource1')
+        test.assert(result === false, 'Guard should not allow anonymous use resource1');
       });
   },
   
@@ -68,7 +70,7 @@ TestIt('TestGuardFilter', {
     var result = null;
     
     var request = new MockRequest('GET', '/resource/1', {
-      cookies: ''
+      cookie: ''
     });
   }
   

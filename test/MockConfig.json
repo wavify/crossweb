@@ -37,6 +37,11 @@
       "admin@sample": { "password": "1password;", "roles": [ "role1" ] },
       "user1@sample": { "password": "1password;", "roles": [ "role2" ] },
       "user2@sample": { "password": "1password;", "roles": [ "role2", "role3" ]}
+    },
+    "encryption": {
+      "method": "aes128",
+      "key": "5F4DCC3B5AA765D61D8327DEB882CF99",
+      "iv": "2B95990A9151374ABD8FF8C5A7A0FE08"
     }
   },
   
