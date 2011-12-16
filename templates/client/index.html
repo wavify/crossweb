@@ -1,14 +1,736 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
     <title>Crossweb Framework</title>
+    
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="css/crossweb.css" type="text/css">
+    
+    <link rel="stylesheet" href="scripts/google-code-prettify/prettify.css" type="text/css">
+    
   </head>
   
   <body>
     
-    <a href="/login.html">Login</a>
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-inner">
+        <div class="container">
+          <a class="brand">Crossweb</a>
+          <ul class="nav">
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#handler">Handler</a></li>
+            <li><a href="#filter">Filter</a></li>
+            <li><a href="#form">Form</a></li>
+            <li><a href="#guard">Guard</a></li>
+            <li><a href="#log">Log</a></li>
+          </ul>
+          
+          <ul class="nav secondary-nav">
+            <li><a href="#login">Login</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
     
-    <h1>Hello, Crossweb</h1>
+    <!-- Header -->
+    <header class="jumbotron masthead" id="overview">
+      <div class="inner">
+        <div class="container">
+          <h1>Crossweb</h1>
+          <p class="lead">
+            Crossweb is a web framework internal use in Crossproject web team to develop web applications.<br>
+            It includes filter, handler and guard for basic authentication with simple configuration file.
+          </p>
+        </div>
+      </div>
+    </header>
+    
+    <div class="container">
+      
+      <!-- About -->
+      <section id="about">
+        <div class="page-header">
+          <h1>About Crossweb <small>Basic components and configuration file</small></h1>
+        </div>
+
+        <div class="row">
+          <div class="span8">
+            <h2>Components</h2>
+            <p>
+              Crossweb framework consist of 3 parts, Router, Filter and Guard. 
+            </p>
+            <p>
+              <strong>Router</strong> is internal framework component that control request flow. User can't
+              change anything in this layer.
+            </p>
+            <p>
+              <strong>Filter</strong> is stack of action that parse request and reject or allow and pass it 
+              to next filter or handler. It may add some information to request which may 
+              use in next filter or handler.
+            </p>
+            <p>
+              <strong>Handler</strong> is application or resource logic that process request and render real
+              result to user.
+            </p>
+            <ul class="media-grid">
+              <li>
+                <a href="#"><img src="images/components.png" alt="Simple three-column layout with hero unit"></a>
+              </li>
+            </ul>
+          </div><!-- /col -->
+          
+          <div class="span8">
+            <h2>Configurations</h2>
+            <p>
+              Crossweb framework configuration is JSON format file that user can add any tag or attribute and 
+              parse it by themselves when create own filter or handler.
+            </p>
+            
+            <pre class="prettyprint linenums">
+{
+  "name": "crossweb",
+  "hostname": "localhost",
+  "address": "127.0.0.1",
+  "port": 8080,
+  "pid": "project.pid",
+  "filters": [ "FormFilter", "GuardFilter" ],
+  "routes": {
+    "post:/authenticate": { "handler": "GuardHandler.authenticate" }
+  }, 
+  "log": {
+    "appenders": [ { "type": "console" } ],
+    "levels": {
+      "console": "info",
+      "crossweb": "info",
+
+      "danger": "error"
+    }
+  }
+
+}
+            </pre>
+            
+          </div><!-- /col -->
+          
+        </div><!-- /row -->
+        
+        <div class="row">
+          <div class="span16">
+            <h2>Framework file structure</h2>
+            
+            <p>
+              After install framework by command <code>npm install -g git+http://192.168.178.10/git/crossweb/framework.git</code>
+              user can use command <code>cw</code> to generate project structure. It will create folder which have file like
+              below structure.
+            </p>
+            
+            <pre>
+Project
+ +- client               : Client static file live here
+  +- css                 : CSS Stylesheet
+  +- images              : Images
+  +- scripts             : Javascript live here
+  +- index.html          : Main index file.
+ +- server               : Server handler and filter live here.
+  +- filters             : Filter object should live here.
+  +- handlers            : Handler object should live here.
+  +- modules             : Other class or object should live here.
+  +- app.js              : Real application live here.
+  +- config-default.json : Default configuration file which user can copy to new config.json file and use it in production env.
+            </pre>
+          </div>
+        </div><!-- /row -->
+        
+      </section><!-- /about -->
+      
+      <!-- Handler -->
+      <section id="handler">
+        <div class="page-header">
+          <h1>Handler <small>Application logic or resource handler</small></h1>
+        </div>
+        
+        <div class="row">
+          <div class="span4">
+            <h2>Handler class</h2>
+            <p>
+              Handler is a resource or logic handler. It consists of two main parts, setup and real logic handler.
+            </p>
+            
+            <p>
+              <strong>setup</strong> <em>(optional)</em> is magic method have only one argument <em>(configPath)</em> 
+              and don't need to return anything. It use for read configuration from configuration file path that pass 
+              as method argument and setup handler itself.
+            </p>
+            
+            <p>
+              <strong>handler</strong> or other method is real logic handler. It must have two arguments. 
+              <em>(request,resource)</em> Handler will invoke after client request on path that set in configuration file. 
+            </p>
+            
+            <p>
+              All methods in object or class must exports with it name and use that name in configuration file.
+              Method name in object may not match with export name but export name must match in configuration file.
+            </p>
+          </div><!-- /col -->
+          
+          <div class="span12">
+            <h3>Example handler class</h3>
+            <pre class="prettyprint linenums">
+var fs = require('fs');
+
+var _prefix = '';
+var TimeHandler = {
+
+  setup: function (configPath) {
+    var config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+    _prefix = config.time.prefix;
+  },
+
+  'time': function (request, response) {
+    response.writeHead(200, {});
+    
+    var render = _prefix ? _prefix + new Date().getTime() : 'Time: ' + new Date().getTime();
+    response.end(render);
+  }
+  
+};
+
+exports.setup = TimeHandler.setup;
+exports.time = TimeHandler.time;
+            </pre>
+          </div><!-- /col -->
+          
+        </div><!-- /row -->
+        
+        <div class="row">
+          <div class="span4">
+            <h2>Configuration</h2>
+            <p>
+              Handler configuration live in the same place as application configuration.
+              To receive request, add object 
+            </p>
+            
+            <code>{"handler":"Class.method"}</code> 
+            
+            <p>
+              in routes in format 
+            </p>
+            
+            <code>"method:/path/to/resource"</code>
+            
+            <p>
+              If want to add class configuration e.g. time prefix, just add another node
+              to configuration file e.g. 
+            </p>
+              
+            <code>"time":{"prefix":"Current:"}</code>
+          </div>
+          
+          <div class="span12">
+            <h3>Example time handler configuration</h3>
+            
+            <pre class="prettyprint linenums">
+{
+  "name": "crossweb",
+  "hostname": "localhost",
+  "address": "127.0.0.1",
+  "port": 8080,
+  "pid": "project.pid",  
+  "filters": [ "FormFilter", "GuardFilter" ],
+  "routes": {
+    <code>"get:/time": { "handler": "TimeHandler.time" }</code>
+  }, 
+
+  "time": {
+    "prefix": "Current: "
+  },
+
+  "log": {
+    "appenders": [ { "type": "console" } ],
+    "levels": {
+      "console": "info",
+      "crossweb": "info",
+
+      "danger": "error"
+    }
+  }
+
+}
+            </pre>
+          </div><!-- /col -->
+          
+        </div>
+        
+      </section><!-- /handler -->
+      
+      <!-- Filter -->
+      <section id="filter">
+        <div class="page-header">
+          <h1>Filter <small>Request filter and information appender</small></h1>
+        </div>
+        
+        <div class="row">
+          <div class="span4">
+            <h2>Filter class</h2>
+            
+            <p>
+              Filter is an object use to filter request and reject when it doesn't match criteria
+              or extract some information from request or filter information that pass before to
+              append new information in request. Filter must have 2 methods, check and fail and
+              may have setup method for read configuration file. 
+            </p>
+            
+            <p>
+              <strong>exports.variable name must be the same as file name.</strong>
+            </p>
+            
+          </div><!-- /col -->
+          
+          <div class="span12">
+            <h3>The 3 Methods</h3>
+            
+            <p>
+              Filter class must have two methods, check and fail to tell framework is it should pass request
+              to next filter or handler and if it fail what is should do. Other optional method is setup that
+              is the same as Handler which have one argument <em>configPath</em>. 
+            </p>
+            
+            <ol>
+              <li>
+                <strong>setup</strong> <em>(optional)</em> is magic method have only one argument and 
+                don't need to return anything. It use for read configuration from configuration file 
+                path that pass as method argument and setup handler itself.
+              </li>
+              <li>
+                <strong>check</strong> is filter function that determine is request should pass to handler
+                or next filter. If it fail, framework will call fail method. This method have two arguments.
+                <em>(request, callback)</em> request is HTTP Request and callback is function that have two
+                arguments, error and boolean that tell is request pass criteria.
+              </li>
+              <li>
+                <strong>fail</strong> is fail handler function when check return false in second argument.
+                It should use response to render result in this method. It also have two arguments. 
+                <em>(request, response)</em>
+              </li>
+            </ol>
+            
+            <h3>Example version appender filter</h3>
+            
+            <pre class="prettyprint linenums">
+var fs = require('fs');
+
+var _version = null;
+var VersionAppenderFilter = {
+  name: 'Version appender filter',
+
+  setup: function (configPath) {
+    var config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+    _version = config.version;
+  },
+
+  check: function (request, callback) {
+    if (_version) {
+      request.version = version;
+      callback(null, true);
+    } else {
+      callback(null, false);
+    }
+  },
+
+  fail: function (request, response) {
+    response.writeHead(503, {});
+    response.end('No version number provide.);
+  }
+};
+
+exports.VersionAppenderFilter = VersionAppenderFilter;
+            </pre>            
+          </div><!-- /col -->
+          
+        </div> <!-- /row -->
+        
+        <div class="row">
+          <div class="span4">
+            <h2>Configuration</h2>
+            
+            <p>
+              Filter configuration live in the same place as application configuration same as handler.
+              It must add to filters which name the same as filter file. And framework will process 
+              filter the same order as list in filters attribute.
+            </p>
+            
+            <code>["Filter1","Filter2"]</code> 
+            
+            <p>
+              From above configuration, it will use filter1 check and process to filter2 if filter1 is
+              pass check.
+            </p>
+            
+          </div><!-- /col -->
+          
+          <div class="span12">
+            <h3>Example filter configuration</h3>
+            
+            <pre class="prettyprint linenums">
+{
+  "name": "crossweb",
+  "hostname": "localhost",
+  "address": "127.0.0.1",
+  "port": 8080,
+  "pid": "project.pid",  
+  <code>"filters": [ "VersionAppenderFilter" ],</code>
+  "routes": {
+    "get:/time": { "handler": "TimeHandler.time" }
+  }, 
+
+  "time": {
+    "prefix": "Current: "
+  },
+
+  "log": {
+    "appenders": [ { "type": "console" } ],
+    "levels": {
+      "console": "info",
+      "crossweb": "info",
+
+      "danger": "error"
+    }
+  }
+
+}
+            </pre>
+          </div><!-- /col -->
+          
+        </div> <!-- /row -->
+        
+      </section><!-- /filter -->
+      
+      <!-- Form -->
+      <section id="form">
+        <div class="page-header">
+          <h1>Form <small>Request variable</small></h1>
+        </div>
+        
+        <div class="row">
+          
+          <div class="span4">
+            <h2>What's Form</h2>
+            
+            <p>
+              Form is filter that parse request and extract information from query or data user send 
+              with <code>form</code> tag in client side. It create a map <code>name:value</code>
+              and append it to request in body attribute.
+            </p>
+            
+            <p>
+              To use this feature, put <code>"FormFilter"</code> in <code>"filters"</code> attribute 
+              in configuration file. It must place it in first item.
+            </p>
+          </div><!-- /col -->
+          
+          <div class="span12">
+            
+            <h3>Example client form</h3>
+            
+            <pre class="prettyprint linenums">
+&lt;form action="/resource?id=1" method="post" enctype="multipart/form-data"&gt;
+  &lt;p&gt;
+    &lt;label&gt;Username&lt;/label&gt;
+    &lt;input type="text" name="username"&gt;
+  &lt;/p&gt;
+  
+  &lt;p&gt;
+    &lt;label&gt;File&lt;/label&gt;
+    &lt;input type="file" name="file"&gt;
+  &lt;/p&gt;
+  
+  &lt;p&gt;
+    &lt;input type="submit" value="Send"&gt;
+  &lt;/p&gt;
+&lt;form&gt;
+            </pre>
+            
+            <p>
+              This form after transfer to server will parse and transform to map put it to request
+              by FormFilter which you can use in Handler like below
+            </p>
+            
+            <h3>Example get form attribute from request</h3>
+            
+            <pre class="prettyprint linenums">
+var SampleHandler = {
+  ...
+  
+  doSomething: function (request, response) {
+    ...
+    var username = request.body.username;
+    var file = request.body.file;
+    ...
+  }
+  
+  ...
+}
+            </pre>
+          </div>
+          
+        </div><!-- /row -->
+        
+      </section><!-- /form -->
+      
+      <!-- Guard -->
+      <section id="guard">
+        <div class="page-header">
+          <h1>Guard <small>Security in framework</small></h1>
+        </div>
+        
+        <div class="row">
+          <div class="span16">
+            <h3>What's Guard</h3>
+            
+            <p>
+              Guard is security module live in framework, user can use by add it to filter and handler. 
+              It have 3 main parts, <strong>Authentication</strong>, <strong>Authorization</strong> and
+              <strong>Encryption</strong>. 
+            </p>
+            
+          </div><!-- /col -->
+          
+        </div><!-- /row -->
+        
+        <div class="row">
+          
+          <div class="span-one-third">
+            <h3>Authentication</h3>
+            
+            <p>
+              User can authenticate with <code>GuardHandler</code> method <code>authenticate</code>. 
+              It will generate session that will encrypt and live on client cookie. Default authenticator 
+              is in-memory authenticator which read user information list from configuration file. 
+              Internal authenticator can set users by add below configurations.
+            </p>
+            
+            <h4>Example in-memory users configuration</h4>
+            <pre class="prettyprint">
+"guard": {
+  "users": {
+    "username": { 
+      "password": "password", 
+      "roles": [ "role1" ] 
+    }
+  }
+}
+            </pre>
+            
+            <p>
+              User can use external authenticator by provide it module name in <code>authenticator</code>
+              attribute.
+            </p>
+            
+            <pre class="prettyprint">
+"guard": {
+  "authenticator": "LDAPAuthenticator"
+}              
+            </pre>
+            
+          </div><!-- /col -->
+          
+          <div class="span-one-third">
+            <h3>Authorization</h3>
+            
+            <p>
+              Framework check authorization base on path in <code>GuardFilter</code>. It read routes
+              configuration and check allow attribute in path object. If it have allow attribute,
+              only user that have role in it list can get that resource. However, resource that doesn't
+              have that attribute mean everyone include anonymous can access it.
+            </p>
+            
+            <h4>Example route configuration</h4>
+            <pre class="prettyprint">
+"routes": {
+  "get:/resource": {
+    "handler": "Module.method",
+<code>    "allow": [ "role1","role2" ]</code>
+  }
+}
+            </pre>
+          </div><!-- /col -->
+          
+          <div class="span-one-third">
+            <h3>Encryption</h3>
+            
+            <p>
+              Because user session is keep in cookie and send to client side. So, framework will encrypt
+              it before set it in cookie. User can set encrypt method in configuration file for example
+              <strong>aes256</strong>. Key and IV can generate from openssl command.
+            </p>
+            
+            <code>$openssl enc -aes-128-cbc -k password -nosalt -P</code>
+            
+            <p>
+              After got key, set it to configuration like below example.
+            </p>
+            
+            <h4>Example encryption configuration</h4>
+            <pre class="prettyprint">
+"guard": {
+  "encryption": {
+    "method": "aes128",
+    "key": "5F4DCC3B5AA765D61D8327...",
+    "iv": "2B95990A9151374ABD8FF8C..."
+  }
+}
+            </pre>
+          </div><!-- /col -->
+          
+        </div>
+        
+        <div class="row">
+          
+          <div class="span16">
+            <p>Combine those three part to get guard configuration</p>
+            <h4>Example full guard configuration</h4>
+            
+            <pre class="prettyprint linenums">
+"filters": [ "GuardFilter" ],
+"routes": { "post:/authenticate": { "handler": "GuardHandler.authenticate", "allow": [ "role1" ]} },
+"guard": {
+  "session": "sessionid",
+  "locations": {
+    "index": "/index"
+  },
+  "users": {
+    "admin@sample": { "password": "samplepassword", "roles": [ "role1" ] }
+  },
+  "encryption": {
+    "method": "aes256",
+    "key": "5F4DCC3B5AA765D61D8327DEB882CF992B95990A9151374ABD8FF8C5A7A0FE08",
+    "iv": "B7B4372CDFBCB3D16A2631B59B509E94"
+  }
+}
+            </pre>
+          </div>
+          
+        </div>
+        
+      </section><!-- /guard -->
+      
+      <!-- Log -->
+      <section id="log">
+        <div class="page-header">
+          <h1>Log <small>What's happen in application</small></h1>
+        </div>
+        
+        <div class="row">
+          <div class="span4">
+            <h2>Log4JS</h2>
+            
+            <p>
+              Crossweb framework use log4js module. It can use in application logic by
+              require <code>log4js</code> in application and use it by getLogger from
+              require object.
+            </p>
+            
+            <p>
+              Log configuration is the same as log4js configuration format but live
+              in JSON format in the same application configuration file.
+            </p>
+          </div>
+          
+          <div class="span12">
+            <h3>Example log configuration</h3>
+            
+            <pre class="prettyprint linenums">
+"log": {
+  "appenders": [ { "category": "danger",
+                   "type": "logLevelFilter",
+                   "level": "error",
+                   "appender": {
+                     "type": "file",
+                     "filenamae": "crossweb-error.log",
+                     "maxLogSize": 10485760,
+                     "backups": 5,
+                     "pollInterval": 15 }},
+                 { "type": "file",
+                   "filename": "crossweb.log",
+                   "maxLogSize": 10485760,
+                   "backups": 5,
+                   "pollInterval": 15 },
+                 { "type": "console" } ],
+  "levels": {
+    "console": "info",
+    "crossweb": "info",
+
+    "danger": "error"
+  }              
+            </pre>
+          </div>
+        </div>
+      </section><!-- /log -->
+      
+      <!-- Login -->
+      <section id="login">
+        <div class="page-header">
+          <h1>Login <small>Sample login form</small></h1>
+        </div>
+        
+        <div class="row">
+          <div class="span4">
+            <h2>Real sample</h2>
+            
+            <p>
+              This form will authenticate to server side and redirect back here.
+              You can see source and use it to embed in login form.
+            </p>
+          </div>
+          
+          <div class="span12">
+
+            <form action="/authenticate" method="post" accept-charset="utf-8">
+              <fieldset id="authentication_form">
+                <legend>Authentication form</legend>
+                
+                <div class="clearfix">
+                  <label for="username">Username</label>
+                  <div class="input">
+                    <input class="xlarge" type="text" name="username">
+                  </div>
+                </div>
+                
+                <div class="clearfix">
+                  <label for="password">Password</label>
+                  <div class="input">
+                    <input class="xlarge" type="password" name="password">
+                  </div>
+                </div>
+                
+                <div class="clearfix">
+                  <input type="hidden" name="type" value="plain">
+                </div>
+                
+                <div class="actions">
+                  <input type="submit" value="Login" class="btn primary">
+                </div>
+              </fieldset>
+            </form>
+
+          </div>
+          
+        </div>
+      </section><!-- /login -->
+      
+    </div>
+    
+    <footer class="footer">
+      <div class="container">
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>Crossweb framework 1.0</p>
+      </div>
+    </footer>
+    
+    <script src="scripts/google-code-prettify/prettify.js"></script>
+    <script>window.onload = function () { prettyPrint(); }</script>
     
   </body>
 </html>
