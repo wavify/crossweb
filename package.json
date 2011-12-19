@@ -1,7 +1,7 @@
 {
   "name": "crossweb",
   "description": "Crossweb project web framework",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "dependencies": {
     "common": "git+http://builder:builder@192.168.178.10/git/crossweb/common.git",
     
