@@ -139,6 +139,33 @@ TestIt('TestGuardFilter', {
         test.assertEqual('admin@sample', request.session.user, 'Session should have user attribute');
         test.assertEqual('role1', request.session.roles[0], 'Admin should have role1');
       });
-  }
+  },
+  
+  'test authorize cluster resource with cluster admin user': function (test) {
+    var done = false;
+    var result = null;
+    
+    var request = new MockRequest('GET', '/resource/cluster');
+    request.body = {
+      session: 'qvrAE2x3xMwFqJlVCWsQEkPmQXLa//Zb5em1jteI+GmG90Qh06Faci03lO8OWDRvC1lng2JvEYhc4NWW5q3xQA=='
+    };
+    
+    GuardFilter.check(request, function (error, output) {
+      result = output;
+      
+      done = true;
+    });
+    
+    test.waitFor(
+      function (time) {
+        return done || time > timeout;
+      },
+      function () {
+        test.assert(result === true, 'Guard should allow llun use cluster');
+        test.assert(request.session, 'Guard should create session from cookie');
+        test.assertEqual('llun@crossflow.ws', request.session.user, 'Session should have user attribute');
+        test.assertEqual('clusteradmin', request.session.roles[0], 'llun should have clusteradmin');
+      });
+ 	}
   
 });

@@ -21,7 +21,8 @@
     "get:/resource/3": { "handler": "MockDefaultHandler.resource", "allow": [ "role2" ] },
     "get:/resource/4": { "handler": "MockDefaultHandler.resource", "allow": [] },
     "get:/resource/5": { "handler": "MockDefaultHandler.resource" },
-    
+	
+    "get:/resource/cluster": { "handler": "MockDefaultHandler.resource", "allow": [ "clusteradmin" ] },
     
     "get:/test": { "handler": "NoHandler.test", "allow": [] },
     "get:/test2": { "handler": "MockSessionHandler.nomethod", "allow": [] },
@@ -37,7 +38,8 @@
     "users": {
       "admin@sample": { "password": "1password;", "roles": [ "role1" ] },
       "user1@sample": { "password": "1password;", "roles": [ "role2" ] },
-      "user2@sample": { "password": "1password;", "roles": [ "role2", "role3" ]}
+      "user2@sample": { "password": "1password;", "roles": [ "role2", "role3" ]},
+      "llun@crossflow.ws": { "password": "password", "roles": [ "clusteradmin"]}
     },
     "encryption": {
       "method": "aes128",
