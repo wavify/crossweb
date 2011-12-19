@@ -53,17 +53,14 @@ TestIt('TestGuardHandler', {
           user: 'admin@sample',
           roles: ['role1']
         }));
-        var expect = [
-          'user=admin@sample; Path=/;',
-          'session=' + session + '; Path=/;',
-          'expireTime=' + (new Date().getTime() + 1314000000) + '; Path=/;'
-        ];
         
         test.assert(response.header['Set-Cookie'], 
           'GuardHandler should set cookie after authenticate success');
           
-        test.assertEqual(expect[0],  response.header['Set-Cookie'][0]);
-        test.assertEqual(expect[1],  response.header['Set-Cookie'][1]);
+        test.assert(/user=admin@sample;/.test(response.header['Set-Cookie'][0]),
+          'Cookie should have user');
+        test.assert(new RegExp('session=' + session).test(response.header['Set-Cookie'][1]),
+          'Cookie should have session');
 
         test.assert(response.header['P3P'], 'Response header should have P3P header');
         test.assertEqual(
@@ -134,7 +131,7 @@ TestIt('TestGuardHandler', {
         done = true;
       });
       
-    var expect = new Date().getTime() + 1314000000;
+    var expect = Date.parse(new Date(new Date().getTime() + 1314000000).toUTCString());
     GuardHandler.authenticate(request, response);
     
     test.waitFor(
@@ -150,10 +147,10 @@ TestIt('TestGuardHandler', {
         test.assert(response.header['Set-Cookie'], 
           'GuardHandler should set cookie after authenticate success');
           
-        var expireTime = response.header['Set-Cookie'][2].match('expireTime=\\d+;')[0].split('=')[1];
-        expireTime = parseInt(expireTime.substring(0, expireTime.length-1));
+        var expiresPattern = /(Sun|Mon|Tue|Wed|Thu|Fri|Sat).*GMT/;
+        var actual = Date.parse(response.header['Set-Cookie'][0].match(expiresPattern)[0]);
         
-        test.assert(expireTime >= expect, 'Cookie expire time should extend');
+        test.assert(actual == expect, 'Cookie expire time should extend');
       });
   }
   
