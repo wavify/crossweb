@@ -152,6 +152,38 @@ TestIt('TestGuardHandler', {
         
         test.assert(actual == expect, 'Cookie expire time should extend');
       });
+  },
+  
+  'test logout': function (test) {
+    var done = false;
+    var request = new MockRequest('GET', '/logout');
+    
+    var response = new MockResponse(
+      function () {
+        done = true;
+      });
+      
+    GuardHandler.logout(request, response);
+    
+    test.waitFor(
+      function (time) {
+        return done || time > timeout;
+      },
+      function () {
+        test.assertEqual(302, response.statusCode, 
+          'Response should redirect to somewhere');
+        test.assertEqual('/index', response.header.Location,
+          'GuardHandler should redirect to index after authenticate success');
+        
+        test.assert(response.header['Set-Cookie'], 
+          'GuardHandler should set cookie after authenticate success');
+          
+        var expiresPattern = /(Sun|Mon|Tue|Wed|Thu|Fri|Sat).*GMT/;
+        var actual = Date.parse(response.header['Set-Cookie'][0].match(expiresPattern)[0]);
+        var expect = new Date(0).getTime();
+        
+        test.assert(actual == expect, 'Cookie expire time should reset');
+      });
   }
   
 });

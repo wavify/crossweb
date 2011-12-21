@@ -10,7 +10,8 @@
   "filters": [ "FormFilter", "GuardFilter" ],
   
   "routes": {
-    "post:/authenticate": { "handler": "GuardHandler.authenticate" }
+    "post:/authenticate": { "handler": "GuardHandler.authenticate" },
+    "get:/logout": { "handler": "GuardHandler.logout" }
   }, 
   
   "guard": {
