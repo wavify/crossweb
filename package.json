@@ -1,7 +1,7 @@
 {
   "name": "crossweb",
   "description": "Crossweb project web framework",
-  "version": "1.0.30",
+  "version": "1.0.31",
   "dependencies": {
     "daemon": "latest",
     "formidable": "latest",
