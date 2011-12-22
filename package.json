@@ -1,15 +1,16 @@
 {
   "name": "crossweb",
   "description": "Crossweb project web framework",
-  "version": "1.0.29",
+  "version": "1.0.30",
   "dependencies": {
-    "common": "git+http://builder:builder@192.168.178.10/git/crossweb/common.git",
-    
     "daemon": "latest",
     "formidable": "latest",
-    "log4js": "latest",
     "mime": "latest",
-    "wrench": "latest"
+    "wrench": "latest",
+    
+    "log4js": "git://github.com/teerapap/log4js-node.git",
+    
+    "common": "git+http://builder:builder@192.168.178.10/git/crossweb/common.git"
   },
   "devDependencies": {
     "test_it": "git://github.com/llun/test_it.git"
