@@ -3,8 +3,8 @@ var MockFilter = {
   pass: true,
   invoke: false,
   
-  setup: function (configPath) {
-    
+  setup: function (configPath, callback) {
+    callback();
   },
   
   check: function (request, callback) {

@@ -13,65 +13,89 @@ var timeout = 1000;
 TestIt('TestRouter', {
   
   'before each': function (test) {
-    
     var configPath = path.join(__dirname, 'MockConfig.json');
     
     test.store = {
       router: new Router(configPath, FileHandler),
       config: JSON.parse(fs.readFileSync(configPath, 'utf8')) 
     };
-    
   },
   
   'test parse handler': function (test) {
+    var done = false;
+    
     var store = test.store;
     var router = store.router;
     
-    var output = Router.parse(path.join(__dirname, 'MockConfig.json'));
+    var output = null;
+
+    Router.parse(path.join(__dirname, 'MockConfig.json'), function (options) {
+      output = options;
+      
+      done = true;
+    });
     
-    var methods = output.methods;
-    var handlers = output.handlers;
-    
-    test.assert(methods.get, 'methods should have "get" property');
-    test.assert(methods.post, 'methods should have "post" property');
-    
-    test.assert(!methods.GET, 'methods should not have "GET" property');
-    test.assert(!methods.POST, 'methods should not have "POST" property');
-    
-    var getMethod = methods.get;
-    test.assert(getMethod['/verifySession'], 'get list should have verifySession path');
-    test.assert(!getMethod['/test'], 'get list should not have test path');
-    test.assert(!getMethod['/test2'], 'get list should not have test2 path');
-    
-    test.assert(!getMethod['/image/*'], 'get list should have image path');
-    
-    var key;
-    // Count handlers
-    var handlerCount = 0;
-    for (key in handlers) {
-      handlerCount++;
-    }
-    
-    test.assert(handlerCount > 0, 'Handler in output should not empty');
-    
-    
-    // Count router handlers
-    var routerHandlerCount = 0;
-    for (key in router.handlers) {
-      routerHandlerCount++;
-    }
-    test.assertEqual(routerHandlerCount, handlerCount, 'Router handler should equal to parser handler.');
+    test.waitFor(
+      function (time) {
+        return done || time > timeout;
+      },
+      function () {
+        var methods = output.methods;
+        var handlers = output.handlers;
+
+        test.assert(methods.get, 'methods should have "get" property');
+        test.assert(methods.post, 'methods should have "post" property');
+
+        test.assert(!methods.GET, 'methods should not have "GET" property');
+        test.assert(!methods.POST, 'methods should not have "POST" property');
+
+        var getMethod = methods.get;
+        test.assert(getMethod['/verifySession'], 'get list should have verifySession path');
+        test.assert(!getMethod['/test'], 'get list should not have test path');
+        test.assert(!getMethod['/test2'], 'get list should not have test2 path');
+
+        test.assert(!getMethod['/image/*'], 'get list should have image path');
+
+        var key;
+        // Count handlers
+        var handlerCount = 0;
+        for (key in handlers) {
+          handlerCount++;
+        }
+
+        test.assert(handlerCount > 0, 'Handler in output should not empty');
+
+        // Count router handlers
+        var routerHandlerCount = 0;
+        for (key in router.handlers) {
+          routerHandlerCount++;
+        }
+        test.assertEqual(routerHandlerCount, handlerCount, 'Router handler should equal to parser handler.');
+      });
   },
-  
+
   'test parse filter': function (test) {
     
+    var done = false;
+    
     var store = test.store;
     var router = store.router;
     
-    var output = Router.parse(path.join(__dirname, 'MockConfig.json'));
+    var output = null;
     
-    var filters = output.filters;
-    test.assertEqual(2, filters.length, 'Router should have two filters');
+    Router.parse(path.join(__dirname, 'MockConfig.json'), function (options) {
+      output = options;
+      done = true;
+    });
+    
+    test.waitFor(
+      function (time) {
+        return done || time > timeout;
+      },
+      function () {
+        var filters = output.filters;
+        test.assertEqual(2, filters.length, 'Router should have two filters');
+      });
     
   },
   
