@@ -6,6 +6,8 @@
   "hostname": "",
   "address": "",
   "port": 8080,
+  
+  "initial": [ "SampleModule" ],
 
   "filters": [ "FormFilter", "MockFilter", "MockInvalidFilter", "MockNoFilter" ],
   
