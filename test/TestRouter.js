@@ -21,6 +21,24 @@ TestIt('TestRouter', {
     };
   },
   
+  'test parse initial': function (test) {
+    var done = false;
+    
+    
+    Router.parse(path.join(__dirname, 'MockConfig.json'), function (options) {
+      done = true;
+    });
+    
+    test.waitFor(
+      function (time) {
+        return done || time > timeout;
+      },
+      function () {
+        var SampleModule = require('./modules/SampleModule.js');
+        test.assert(SampleModule.isCall, 'SampleModule setup should call after parse config');
+      });
+  },
+  
   'test parse handler': function (test) {
     var done = false;
     

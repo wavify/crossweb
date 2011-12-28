@@ -7,7 +7,7 @@
   "address": "",
   "port": 8080,
   
-  "initial": [ "SampleModule" ],
+  "initial": [ "SampleModule", "guard" ],
 
   "filters": [ "FormFilter", "MockFilter", "MockInvalidFilter", "MockNoFilter" ],
   

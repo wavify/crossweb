@@ -6,3 +6,5 @@ exports.setup = function (configPath, callback) {
   isCall = true;
   callback();
 }
+
+exports.isCall = isCall;
