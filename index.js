@@ -1,4 +1,6 @@
 exports.FrameworkError = require('./lib/error').FrameworkError;
+exports.ErrorCode = require('./lib/error').ErrorCode;
+exports.ErrorDomain = require('./lib/error').ErrorDomain;
 
 exports.Crossweb = require('./lib/crossweb').Crossweb;
 exports.Router = require('./lib/router').Router;

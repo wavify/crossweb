@@ -3,7 +3,7 @@ var log4js = require('log4js'),
 
 var TestIt = require('test_it');
 
-var Error = require('../lib/error.js').FrameworkError;
+var Error = require('../lib/error.js').ErrorCode;
 var Guard = require('../lib/modules/guard.js').Guard;
 var Resource = require('../lib/modules/guard.js').Resource;
 

@@ -2,7 +2,8 @@ var path = require('path');
 
 var TestIt = require('test_it');
 
-var Error = require('../lib/error').FrameworkError;
+var ErrorDomain = require('../lib/error').ErrorDomain;
+var ErrorCode = require('../lib/error').ErrorCode;
 
 var GuardHandler = require('../lib/handlers/GuardHandler').GuardHandler;
 var MockRequest = require('./MockRequestResponse').MockRequest;
@@ -94,12 +95,12 @@ TestIt('TestGuardHandler', {
       function () {
         test.assertEqual(403, response.statusCode, 
           'Response should return forbidden');
-          
+        
         test.assertEqual(
           JSON.stringify({
             message: 'Invalid password',
-            domain: 30,
-            code: Error.AUTHENTICATE_WRONG_PASSWORD
+            domain: ErrorDomain.FRAMEWORK,
+            code: ErrorCode.AUTHENTICATE_WRONG_PASSWORD
             }), 
           response.message,
           'Authenticate fail message should response JSON object');
