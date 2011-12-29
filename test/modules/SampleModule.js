@@ -1,10 +1,12 @@
-var isCall = false;
-
-exports.setup = function (configPath, callback) {
-  callback = callback || function () {};
-  
-  isCall = true;
-  callback();
+var _store = {
+  called: false,
+  setup: function (configPath, callback) {
+    callback = callback || function () {};
+    
+    _store.called = true;
+    callback();
+  }
 }
 
-exports.isCall = isCall;
+exports.store = _store;
+exports.setup = _store.setup;

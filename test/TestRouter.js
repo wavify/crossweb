@@ -24,8 +24,11 @@ TestIt('TestRouter', {
   'test parse initial': function (test) {
     var done = false;
     
+    var output = null;
     
     Router.parse(path.join(__dirname, 'MockConfig.json'), function (options) {
+      output = options;
+      
       done = true;
     });
     
@@ -34,8 +37,8 @@ TestIt('TestRouter', {
         return done || time > timeout;
       },
       function () {
-        var SampleModule = require('./modules/SampleModule.js');
-        test.assert(SampleModule.isCall, 'SampleModule setup should call after parse config');
+        test.assert(output.modules, 'Router.parse should return module');
+        test.assert(output.modules[0].store.called, 'setup method in SampleModule should called');
       });
   },
   
