@@ -1,6 +1,5 @@
 var fs = require('fs'),
-    path = require('path'),
-    TestIt = require('test_it');
+    path = require('path');
 
 var Router = require('../').Router;
 var FileHandler = require('../lib/handlers/FileHandler').FileHandler;
@@ -10,7 +9,7 @@ var MockResponse = require('./MockRequestResponse.js').MockResponse;
 
 var timeout = 1000;
 
-TestIt('TestRouter', {
+exports.test = {
   
   'before each': function (test) {
     var configPath = path.join(__dirname, 'MockConfig.json');
@@ -242,6 +241,30 @@ TestIt('TestRouter', {
     
   },
   
+  'test invoke empty config': function (test) {
+    var router = new Router(path.join(__dirname, 'MockEmptyConfig.json'), FileHandler);
+    var done = false;
+    
+    var request = new MockRequest('GET', '/sample.txt');
+    var response = new MockResponse(
+      function () {
+        done = true;
+      });
+    
+    router.invoke(request, response);
+    
+    test.waitFor(
+      function (time) {
+        return done || time > timeout;
+      },
+      function () {
+        var samplePath = path.join(__dirname, 'client', 'sample.txt');
+        var sample = fs.readFileSync(samplePath, 'utf8');
+        test.assertEqual(200, response.statusCode);
+        test.assertEqual(sample, response.message);
+      });
+  },
+  
   'test invoke unsupport method': function (test) {
     var store = test.store;
     var router = store.router;
@@ -265,4 +288,4 @@ TestIt('TestRouter', {
       });
   }
   
-});
+};

@@ -1,7 +1,5 @@
 var path = require('path');
 
-var TestIt = require('test_it');
-
 var ErrorDomain = require('../lib/error').ErrorDomain;
 var ErrorCode = require('../lib/error').ErrorCode;
 
@@ -15,7 +13,7 @@ var cipher = new Security('aes128', '5F4DCC3B5AA765D61D8327DEB882CF99',
 
 var timeout = 1000;
 
-TestIt('TestGuardHandler', {
+exports.test = {
   
   'before all': function (test) {
     GuardHandler.setup(path.join(__dirname, 'MockConfig.json'));
@@ -187,4 +185,4 @@ TestIt('TestGuardHandler', {
       });
   }
   
-});
+};

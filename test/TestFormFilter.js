@@ -1,5 +1,4 @@
 var path = require('path');
-var TestIt = require('test_it');
 
 var FormFilter = require('../lib/filters/FormFilter').FormFilter;
 
@@ -8,7 +7,7 @@ var MockResponse = require('./MockRequestResponse.js').MockResponse;
 
 var timeout = 1000;
 
-TestIt('TestFormFilter', {
+exports.test = {
   
   'before all': function (test) {
     FormFilter.setup(path.join(__dirname, 'MockConfig.json'));
@@ -417,4 +416,4 @@ TestIt('TestFormFilter', {
       });
   }
   
-});
+};

@@ -1,7 +1,5 @@
 var path = require('path');
 
-var TestIt = require('test_it');
-
 var GuardFilter = require('../lib/filters/GuardFilter').GuardFilter;
 var MockRequest = require('./MockRequestResponse').MockRequest;
 var MockResponse = require('./MockRequestResponse').MockResponse;
@@ -10,7 +8,7 @@ var Security = require('../lib/modules/guard').Security;
 
 var timeout = 1000;
 
-TestIt('TestGuardFilter', {
+exports.test = {
   
   'before all': function (test) {
     GuardFilter.setup(path.join(__dirname, 'MockConfig.json'));
@@ -168,4 +166,4 @@ TestIt('TestGuardFilter', {
       });
  	}
   
-});
+};

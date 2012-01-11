@@ -1,6 +1,5 @@
 var fs = require('fs'),
-    path = require('path'),
-    TestIt = require('test_it');
+    path = require('path');
 
 var FileHandler = require('../lib/handlers/FileHandler').FileHandler;
 
@@ -9,7 +8,7 @@ var MockResponse = require('./MockRequestResponse.js').MockResponse;
 
 var timeout = 1000;
 
-TestIt('TestFileHandler', {
+exports.test = {
   
   'test file handler setup without base': function (test) {
     
@@ -145,4 +144,4 @@ TestIt('TestFileHandler', {
     
   }
 
-});
+};

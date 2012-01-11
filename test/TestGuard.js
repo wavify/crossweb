@@ -1,15 +1,13 @@
 var log4js = require('log4js'),
     path = require('path');
 
-var TestIt = require('test_it');
-
 var Error = require('../lib/error.js').ErrorCode;
 var Guard = require('../lib/modules/guard.js').Guard;
 var Resource = require('../lib/modules/guard.js').Resource;
 
 var timeout = 1000;
 
-TestIt('TestGuard', {
+exports.test = {
   
   'before each': function (test) {
     test.guard = new Guard(path.join(__dirname, 'MockConfig.json'));
@@ -365,4 +363,4 @@ TestIt('TestGuard', {
       });
   }
   
-});
+};
