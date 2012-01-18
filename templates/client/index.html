@@ -95,6 +95,7 @@
   "address": "127.0.0.1",
   "port": 8080,
   "pid": "project.pid",
+  "initial": [ "guard" ],
   "filters": [ "FormFilter", "GuardFilter" ],
   "routes": {
     "post:/authenticate": { "handler": "GuardHandler.authenticate" }
@@ -183,9 +184,13 @@ var fs = require('fs');
 var _prefix = '';
 var TimeHandler = {
 
-  setup: function (configPath) {
+  setup: function (configPath, callback) {
+    callback = callback || function () {};
+    
     var config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
     _prefix = config.time.prefix;
+    
+    callback();
   },
 
   'time': function (request, response) {
@@ -325,9 +330,13 @@ var _version = null;
 var VersionAppenderFilter = {
   name: 'Version appender filter',
 
-  setup: function (configPath) {
+  setup: function (configPath, callback) {
+    callback = callback || function () {};
+    
     var config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
     _version = config.version;
+    
+    callback();
   },
 
   check: function (request, callback) {
