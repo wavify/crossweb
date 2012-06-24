@@ -21,7 +21,7 @@ exports.test = {
     
     var request = new MockRequest('GET', '/resource/1', {
       session: {
-        user: 'admin@sample',
+        info: { username: 'admin@sample' },
         roles: [ 'role1' ]
       }
     });
@@ -68,7 +68,7 @@ exports.test = {
     var result = null;
     
     var request = new MockRequest('GET', '/resource/1', {
-      cookie: 'user=admin@sample; session=HFk/Rh6Asdx6J5LqNyaKJuy/Yqb7KiKKFOlLyetcXefWPegtLb7cixtOQK9qs6P7; expireTime=1325240582559'
+      cookie: 'user={"username":"admin@sample"}; session=w/GJFcri6nRLkc6pMh4LIlSceYqkRIaYvtyZDn4FVmDD5fOakKezGGpT1OrNRHmTi+WNnfnoY3jqiVQG0Ve8Gw==; expireTime=1325240582559'
     });
     
     GuardFilter.check(request, function (error, output) {
@@ -84,7 +84,7 @@ exports.test = {
       function () {
         test.assert(result === true, 'Guard should allow admin use resource1');
         test.assert(request.session, 'Guard should create session from cookie');
-        test.assertEqual('admin@sample', request.session.user, 'Session should have user attribute');
+        test.assertEqual('admin@sample', request.session.user.username, 'Session should have user attribute');
         test.assertEqual('role1', request.session.roles[0], 'Admin should have role1');
       });
   },
@@ -94,7 +94,7 @@ exports.test = {
     var result = null;
     
     var request = new MockRequest('GET', '/resource/1', {
-      cookie: 'user=admin@sample; session=invalidsession; expireTime=1325240582559'
+      cookie: 'user={"username":"admin@sample"}; session=invalidsession; expireTime=1325240582559'
     });
     
     GuardFilter.check(request, function (error, output) {
@@ -116,9 +116,9 @@ exports.test = {
     var done = false;
     var result = null;
     
-    var request = new MockRequest('GET', '/resource/1?session=HFk/Rh6Asdx6J5LqNyaKJuy/Yqb7KiKKFOlLyetcXefWPegtLb7cixtOQK9qs6P7');
+    var request = new MockRequest('GET', '/resource/1?session=w/GJFcri6nRLkc6pMh4LIlSceYqkRIaYvtyZDn4FVmDD5fOakKezGGpT1OrNRHmTi+WNnfnoY3jqiVQG0Ve8Gw==');
     request.body = {
-      session: 'HFk/Rh6Asdx6J5LqNyaKJuy/Yqb7KiKKFOlLyetcXefWPegtLb7cixtOQK9qs6P7'
+      session: 'w/GJFcri6nRLkc6pMh4LIlSceYqkRIaYvtyZDn4FVmDD5fOakKezGGpT1OrNRHmTi+WNnfnoY3jqiVQG0Ve8Gw=='
     };
     
     GuardFilter.check(request, function (error, output) {
@@ -134,7 +134,7 @@ exports.test = {
       function () {
         test.assert(result === true, 'Guard should allow admin use resource1');
         test.assert(request.session, 'Guard should create session from cookie');
-        test.assertEqual('admin@sample', request.session.user, 'Session should have user attribute');
+        test.assertEqual('admin@sample', request.session.user.username, 'Session should have user attribute');
         test.assertEqual('role1', request.session.roles[0], 'Admin should have role1');
       });
   },
@@ -145,7 +145,7 @@ exports.test = {
     
     var request = new MockRequest('GET', '/resource/cluster');
     request.body = {
-      session: 'qvrAE2x3xMwFqJlVCWsQEkPmQXLa//Zb5em1jteI+GmG90Qh06Faci03lO8OWDRvC1lng2JvEYhc4NWW5q3xQA=='
+      session: 'w/GJFcri6nRLkc6pMh4LIrWWzSyas8am8re0CK08GpZ8lM/i2kSZFRl6II6EhJmOPk612JjY22gyVsPsKHU6hNHLL9qpzLbd5azOHHvylts='
     };
     
     GuardFilter.check(request, function (error, output) {
@@ -161,7 +161,7 @@ exports.test = {
       function () {
         test.assert(result === true, 'Guard should allow llun use cluster');
         test.assert(request.session, 'Guard should create session from cookie');
-        test.assertEqual('llun@crossflow.ws', request.session.user, 'Session should have user attribute');
+        test.assertEqual('llun@crossflow.ws', request.session.user.username, 'Session should have user attribute');
         test.assertEqual('clusteradmin', request.session.roles[0], 'llun should have clusteradmin');
       });
  	}

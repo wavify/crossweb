@@ -1,4 +1,5 @@
 var fs = require('fs'),
+    log4js = require('log4js'),
     path = require('path');
 
 var Router = require('../').Router;
@@ -10,6 +11,12 @@ var MockResponse = require('./MockRequestResponse.js').MockResponse;
 var timeout = 1000;
 
 exports.test = {
+  
+  'before all': function (test) {
+    //Set log level
+    var logger = log4js.getLogger('crossweb');
+    logger.setLevel('OFF');
+  },
   
   'before each': function (test) {
     var configPath = path.join(__dirname, 'MockConfig.json');
@@ -91,6 +98,33 @@ exports.test = {
           routerHandlerCount++;
         }
         test.assertEqual(routerHandlerCount, handlerCount, 'Router handler should equal to parser handler.');
+      });
+  },
+  
+  'test parse model': function (test) {
+    var done = false;
+    
+    var store = test.store;
+    var router = store.router;
+    
+    var output = null;
+    
+    Router.parse(path.join(__dirname, 'MockConfig.json'), function (options) {
+      output = options;
+      
+      done = true;
+    });
+    
+    test.waitFor(
+      function (time) {
+        return done || time > timeout; 
+      },
+      function () {
+        var methods = output.methods;
+        var models = output.models;
+        
+        var getMethod = methods.get;
+        test.assert(getMethod['/test6'], 'get should have test6');
       });
   },
 
@@ -183,6 +217,33 @@ exports.test = {
     
   },
   
+  'test get test6': function(test) { 
+    
+    var store = test.store;
+    var router = store.router;
+    
+    var done = false;
+    
+    var action = router.request('GET', '/test6');
+    var request = new MockRequest('GET', '/test6');
+    var response = new MockResponse(
+      function() {
+        done = true;
+      });
+      
+    action (request, response);
+    
+    test.waitFor(
+      function(time) { 
+        return done || time > timeout;
+      },
+      function() { 
+        test.assertEqual(200, response.statusCode);
+        test.assertEqual(JSON.stringify({ action: true, message: 'success' }), response.message);
+      });
+    
+  },
+  
   'test invoke': function (test) {
     
     var store = test.store;
@@ -191,6 +252,8 @@ exports.test = {
     var done = false;
     
     var request = new MockRequest('GET', '/sample.txt');
+    request.connection = { remoteAddress: '127.0.0.1' };
+    
     var response = new MockResponse(
       function () {
         done = true;
@@ -214,13 +277,15 @@ exports.test = {
       });
     
   },
-  
+    
   'test invoke on no filter config': function (test) {
     
     var router = new Router(path.join(__dirname, 'MockNoFilterConfig.json'), FileHandler);
     var done = false;
     
     var request = new MockRequest('GET', '/sample.txt');
+    request.connection = { remoteAddress: '127.0.0.1' };
+    
     var response = new MockResponse(
       function () {
         done = true;
@@ -246,6 +311,8 @@ exports.test = {
     var done = false;
     
     var request = new MockRequest('GET', '/sample.txt');
+    request.connection = { remoteAddress: '127.0.0.1' };
+    
     var response = new MockResponse(
       function () {
         done = true;
@@ -272,6 +339,8 @@ exports.test = {
     var done = false;
     
     var request = new MockRequest('HEAD', '/verifySession');
+    request.connection = { remoteAddress: '127.0.0.1' };
+    
     var response = new MockResponse(
       function () {
         done = true;

@@ -29,6 +29,12 @@
     "get:/test": { "handler": "NoHandler.test", "allow": [] },
     "get:/test2": { "handler": "MockSessionHandler.nomethod", "allow": [] },
     
+    "get:/test3": { "handler": "RenderHandler.request", "model": "Sample.get", "allow": [] },
+    "post:/test3": { "handler": "RenderHandler.request", "model": "Sample.post", "allow": [] },
+    "get:/test4": { "handler": "RenderHandler.request", "model": "NoModel.get", "allow": [] },
+    "get:/test5": { "handler": "RenderHandler.request", "model": "Sample.nomethod", "allow": [] },
+    "get:/test6": { "model": "Sample.get", "allow": [] },
+    
     "get:/image/*": { "handler": "MockDefaultHandler.compress" }
   }, 
   

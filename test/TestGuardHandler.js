@@ -36,8 +36,6 @@ exports.test = {
       
     GuardHandler.authenticate(request, response);
     
-    
-    
     test.waitFor(
       function (time) {
         return done || time > timeout;
@@ -47,24 +45,10 @@ exports.test = {
           'Response should redirect to somewhere');
         test.assertEqual('/index', response.header.Location,
           'GuardHandler should redirect to index after authenticate success');
-        
-        var session = cipher.encrypt(JSON.stringify({
-          user: 'admin@sample',
-          roles: ['role1']
-        }));
-        
+                
         test.assert(response.header['Set-Cookie'], 
-          'GuardHandler should set cookie after authenticate success');
-          
-        test.assert(/user=admin@sample;/.test(response.header['Set-Cookie'][0]),
-          'Cookie should have user');
-        test.assert(new RegExp('session=' + session).test(response.header['Set-Cookie'][1]),
-          'Cookie should have session');
-
-        test.assert(response.header['P3P'], 'Response header should have P3P header');
-        test.assertEqual(
-          'CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR',
-          response.header['P3P']);
+          'GuardHandler should set cookie after authenticate success');          
+        test.assert(response.header['Set-Cookie'][1].indexOf('session=') == 0, 'Cookie should have session');
       });
     
   },
@@ -102,11 +86,9 @@ exports.test = {
             }), 
           response.message,
           'Authenticate fail message should response JSON object');
-        
+
         test.assert(!response.header['Set-Cookie'], 
           'GuardHandler should not set cookie after authenticate fail');
-        test.assert(!response.header['P3P'],
-          'GuardHandler should not set P3P after authenticate fail');
       });
     
   },
@@ -115,7 +97,8 @@ exports.test = {
     var done = false;
     var request = new MockRequest('POST', '/authenticate', {
       session: {
-        user: 'admin@sample',
+        id: 'HFk/Rh6Asdx6J5LqNyaKJuy/Yqb7KiKKFOlLyetcXefupMAhr71r7KrmA/W9aRu+6kyCbwBiDE8S79ycen5EWMJRdiPpZYklZYVtcr200Xk=',
+        user: { username: 'admin@sample' },
         roles: ['role1']
       }
     });

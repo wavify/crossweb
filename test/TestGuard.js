@@ -4,6 +4,7 @@ var log4js = require('log4js'),
 var Error = require('../lib/error.js').ErrorCode;
 var Guard = require('../lib/modules/guard.js').Guard;
 var Resource = require('../lib/modules/guard.js').Resource;
+var Session = require('../lib/modules/guard.js').Session;
 
 var timeout = 1000;
 
@@ -22,8 +23,8 @@ exports.test = {
       username: 'admin@sample', 
       password: '1password;', 
       type: 'plain' },
-      function (error, user) {
-        output = user;
+      function (error, session) {
+        output = session;
                          
         done = true;
       });
@@ -33,11 +34,13 @@ exports.test = {
         return done || time > timeout;
       },
       function () {
-        test.assert(output, 'Authenticate should return user object');
-        test.assert(output.username, 'User object should have username');
-        test.assert(output.roles, 'User object should have roles');
+        test.assert(output, 'Authenticate should return session object');
         
-        test.assertEqual('admin@sample', output.username, 
+        test.assert(output.id, 'Session object should have an id');
+        test.assert(output.user, 'Session object should have an user property');
+        test.assert(output.roles, 'Session object should have roles');
+        
+        test.assertEqual('admin@sample', output.user.username, 
           'User object username should be the same as input');
         test.assertEqual(1, output.roles.length,
           'User object should have 1 role');
@@ -360,6 +363,57 @@ exports.test = {
       function () {
         test.assert(!unexpect, 'Guard should not return any unexpect');
         test.assert(output === true, 'Guard should allow anonymous to use no method');
+      });
+  },
+  
+  'test resume session': function (test) {
+    var done = false;
+    var output = null;
+    
+    var now = new Date('October 13, 1975 11:13:00').getTime();
+    
+    var guard = test.guard;
+    var id = 'C3/RQ10dWiBsjttNQZkSP4jSE1LJd+LishJ9kgMw0AEonIfejuHg4k2aclH8Gn+kJOjUMb6hqGkx1Ae2KsPSEcTnY3LbtXVUDxV3F4nfBR6/5uK4lg5TckwoZi12gr5Q';
+    
+    guard.resume(id, function (error, updatedSession) {
+      output = updatedSession;
+      
+      done = true;
+    });
+    
+    test.waitFor(
+      function (time) {
+        return done || time > timeout;
+      },
+      function () {
+        test.assert(output.id, 'Session should have an id');
+        test.assert(output.id !== id, 'Session id should changed');
+        test.assert(output.timestamp > now, 'Session timestamp should updated');
+      });
+  },
+  
+  'test validate session': function (test) {
+    var done = false;
+    var output = null;
+    
+    var guard = test.guard;
+    var id = 'C3/RQ10dWiBsjttNQZkSP4jSE1LJd+LishJ9kgMw0AEonIfejuHg4k2aclH8Gn+kJOjUMb6hqGkx1Ae2KsPSEcTnY3LbtXVUDxV3F4nfBR6/5uK4lg5TckwoZi12gr5Q';
+    
+    guard.validate(id, function (error, session) {
+      output = session;
+      
+      done = true;
+    });
+    
+    test.waitFor(
+      function (time) {
+        return done || time > timeout;
+      },
+      function () {
+        test.assert(output.id, 'Session should have an id');
+        test.assertEqual(id, output.id, 'Session should have the same id as input');
+        test.assertEqual('sample', output.user.username);
+        test.assert(output.roles, 'Session should have roles');
       });
   }
   
