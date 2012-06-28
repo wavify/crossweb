@@ -19,7 +19,6 @@
     "async": "0.1.x",
     "daemon": "0.4.x",
     "formidable": "1.0.x",
-    "forever": "0.8.x",
     "hogan.js": "2.0.x",
     "log4js": "0.4.x",
     "mime": "1.2.x",
