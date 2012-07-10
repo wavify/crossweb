@@ -2,6 +2,7 @@
   "name": "crossweb",
   "description": "Web framework",
   "version": "3.0.4",
+  "author": "Wavify Inc. (http://www.wavify.com)",
   "contributors": [
     "Maythee Anegboonlap <null@llun.in.th> (http://llun.in.th)"
   ],
