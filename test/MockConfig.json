@@ -34,6 +34,7 @@
     "get:/test4": { "handler": "RenderHandler.request", "model": "NoModel.get", "allow": [] },
     "get:/test5": { "handler": "RenderHandler.request", "model": "Sample.nomethod", "allow": [] },
     "get:/test6": { "model": "Sample.get", "allow": [] },
+    "post|put:/test7": { "model": "Sample.get", "allow": [] },
     
     "get:/image/*": { "handler": "MockDefaultHandler.compress" }
   }, 

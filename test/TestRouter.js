@@ -125,6 +125,12 @@ exports.test = {
         
         var getMethod = methods.get;
         test.assert(getMethod['/test6'], 'get should have test6');
+        
+        var postMethod = methods.post;
+        test.assert(postMethod['/test7'], 'post should have test7');
+        
+        var putMethod = methods.put;
+        test.assert(putMethod['/test7'], 'put should have test7');
       });
   },
 
