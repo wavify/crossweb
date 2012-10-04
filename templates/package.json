@@ -2,11 +2,11 @@
   "name": "webproject",
   "version": "1.0.0",
   "dependencies": {
-    "crossweb": "git+https://bitbucket.org/llun/crossweb.git"
+    "crossweb": "latest"
   },
-  "engines": [
-    "node >=0.4"
-  ],
+  "engines": {
+    "node": ">= 0.6"
+  },
   "main": "server/app.js",
   "private": true
 }
