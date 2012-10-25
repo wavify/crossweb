@@ -17,9 +17,9 @@ var commands = {
       var pidPath = path.join(current, 'run.pid');
       var nodeModulePath = path.join(current, 'node_modules');
       
-      if (path.existsSync(path.join(current, 'server', 'app.js'))) {
+      if (fs.existsSync(path.join(current, 'server', 'app.js'))) {
         applicationPath = 'server/app.js';
-      } else if (path.existsSync(path.join(current, 'app.js'))) {
+      } else if (fs.existsSync(path.join(current, 'app.js'))) {
         applicationPath = 'app.js';
         pidPath = path.join(current, '..', 'run.pid');
         nodeModulePath = path.join(current, '..', 'node_modules');
@@ -28,7 +28,7 @@ var commands = {
       }
       
       if (applicationPath) {
-        if (path.existsSync(pidPath)) {
+        if (fs.existsSync(pidPath)) {
           var pid = fs.readFileSync(pidPath, 'utf8');
           exec('kill ' + pid);
         }
@@ -49,7 +49,7 @@ var commands = {
           });
         }
 
-        if (path.existsSync(nodeModulePath)) {
+        if (fs.existsSync(nodeModulePath)) {
           startNodeService();
         } else {
           console.log ('Installing dependencies');
@@ -69,12 +69,12 @@ var commands = {
       var current = process.cwd();
       var pidPath = path.join(current, 'run.pid');
       
-      if (path.existsSync(path.join(current, 'app.js'))) {
+      if (fs.existsSync(path.join(current, 'app.js'))) {
         applicationPath = 'app.js';
         pidPath = path.join(current, '..', 'run.pid');
       } 
       
-      if (path.existsSync(pidPath)) {
+      if (fs.existsSync(pidPath)) {
         var pids = fs.readFileSync(pidPath, 'utf8');
         var lines = pids.split('\n');
         for (var index = 0; index < lines.length; index++) {
@@ -102,7 +102,7 @@ var commands = {
         var valid = /^[\w-]+$/;
         if (valid.test(name)) {
           var projectPath = path.resolve('.', name);
-          if (path.existsSync(projectPath)) {
+          if (fs.existsSync(projectPath)) {
             console.error ('Error: Project "' + name + '" already exists.');
           } else {
             fs.mkdirSync(projectPath, 0755);
