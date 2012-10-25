@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/wavify/crossweb.png)](http://travis-ci.org/wavify/crossweb)
 Crossweb
 ========
 
